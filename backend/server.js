@@ -1,12 +1,12 @@
 // instanciation de la bdd
 const db = require('./db')
 
-// section des Routers
-const userRouter = require('./routes/users')
-
 // utilisation de express
 const express = require('express')
 const cors = require('cors')
+
+// section des Routers
+const userRouter = require('./routes/users')
 
 // instanciation de l'application express
 const app = express()
