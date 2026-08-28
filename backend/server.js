@@ -1,33 +1,26 @@
+// instanciation de la bdd
 const db = require('./db')
 
+// section des Routers
+const userRouter = require('./routes/users')
+
+// utilisation de express
 const express = require('express')
 const cors = require('cors')
-const app = express()
 
+// instanciation de l'application express
+const app = express()
 app.use(cors())
 app.use(express.json())
 
+// utilisation des routes
+app.use('/users', userRouter)
+
 const PORT = process.env.PORT || 3001
 
-
+// Route par défaut
 app.get('/', (req, res) => {
-    const stmt = db.prepare('SELECT * FROM users WHERE id = ?')
-    const user = stmt.get(1)
-    res.json({message: 'API is running\n', user})
-})
-
-app.post('/users', (req,res) => {
-    const data = req.body
-    console.log(data)
-
-    const stmt = db.prepare('INSERT INTO users (username, email, password_hash) VALUES (@username, @email, @password_hash)')
-    stmt.run({
-        username: data.username,
-        email: data.email,
-        password_hash: data.password_hash,
-    })
-
-    res.send('It works !')
+    res.json({message: 'API is running\n'})
 })
 
 app.listen(PORT, () => {
