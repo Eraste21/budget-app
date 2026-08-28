@@ -5,7 +5,7 @@ db.pragma('foreign_keys = ON')
 db.exec(`
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_name TEXT UNIQUE NOT NULL,
+        username TEXT UNIQUE NOT NULL,
         email TEXT UNIQUE NOT NULL,
         password_hash TEXT NOT NULL,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP
