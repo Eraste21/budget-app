@@ -1,11 +1,11 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
 const router = express.Router()
-const db = require('../db')
+const db = require('../../db')
 
 const saltRounds = 10
 
-// Fonction pour crypter le mot de passe
+// fonction pour crypter le mot de passe
 const hashPassword = async (password) => {
     try {
         const salt = await bcrypt.genSalt(saltRounds)
@@ -15,9 +15,10 @@ const hashPassword = async (password) => {
     }
 }
 
+// fonction pour comparer les mots de passe
 const comparePassword = async (prev, password) => {
     try {
-        return await bcrypt.compare(prev, password_hash) 
+        return await bcrypt.compare(prev, password)
     } catch (error) {
         throw error
     }
@@ -58,6 +59,22 @@ router.get('/', (req, res) => {
     }
 })
 
+// trouver un utilisateur par email ( GET /users/email?email=bob@gmail.com )
+router.get('/email', (req, res) => {
+    try {
+        const { email } = req.query
+        const stmt = db.prepare('SELECT * FROM users WHERE email = ?')
+        const user = stmt.get(email)
+
+        if (!user) return res.status(404).json({ error: 'email not found' })
+
+        res.status(200).json({ message: 'user found by email successfully', user })
+
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+})
+
 // récupérer un utilisateur par id
 router.get('/:id', (req, res) => {
     try {
@@ -73,13 +90,14 @@ router.get('/:id', (req, res) => {
     }
 })
 
+
 // mettre à jour un utilisateur
 router.patch('/:id', (req, res) => {
     try {
         const { username, email } = req.body
         const stmt = db.prepare('UPDATE users SET username = ?, email = ? WHERE id = ?')
         const result = stmt.run(username, email, req.params.id)
-        
+
         if (result.changes === 0) return res.status(404).json({ error: 'user not found' })
 
         res.status(200).json({ message: 'user updated successfully' })
@@ -95,13 +113,13 @@ router.patch('/:id/password', async (req, res) => {
         let stmt = db.prepare('SELECT * FROM users WHERE id = ?')
         const user = stmt.get(req.params.id)
         if (!user) return res.status(404).json({ error: 'user not found' })
-            
+
         const { prev, password } = req.body
         const isValid = await comparePassword(prev, user.password_hash)
-        if (!isValid) return res.status(401).json({message: 'password invalid'})
+        if (!isValid) return res.status(401).json({ message: 'password invalid' })
 
         user.password_hash = await hashPassword(password)
-                      
+
         stmt = db.prepare('UPDATE users SET password_hash = ? WHERE id = ?')
         stmt.run(user.password_hash, req.params.id)
 
@@ -118,7 +136,7 @@ router.delete('/:id', (req, res) => {
         const stmt = db.prepare('DELETE FROM users WHERE id = ?')
         const result = stmt.run(req.params.id)
 
-        if (result.changes === 0) return res.status(404).json({error: 'user not found'})
+        if (result.changes === 0) return res.status(404).json({ error: 'user not found' })
 
         res.status(200).json({ message: 'user deleted successfully' })
 
