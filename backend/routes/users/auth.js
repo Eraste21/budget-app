@@ -38,32 +38,36 @@ router.post('/register', async (req, res) => {
         const stmt = db.prepare('INSERT INTO users (username, email, password_hash) VALUES (@username, @email, @password_hash)')
         stmt.run({ username, email, password_hash })
 
-        res.status(201).send('user created successfully !')
+        return res.status(201).send('user created successfully !')
 
     } catch (error) {
-        res.status(400).json({ error: error.message })
+        return res.status(400).json({ error: error.message })
     }
 })
 
 // se connecter à un compte
-router.post('/login', (req, res) => {
-    const { email, password } = req.body
-    const stmt = db.prepare('SELECT * FROM users WHERE email = ?')
-    const user = stmt.get(email)
+router.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body
+        const stmt = db.prepare('SELECT * FROM users WHERE email = ?')
+        const user = stmt.get(email)
 
-    if (!user) return res.status(401).json('user not found')
+        if (!user) return res.status(401).send('email or password invalid')
 
-    const isValid = comparePassword(password, user.password_hash)
+        const isValid = await comparePassword(password, user.password_hash)
 
-    if (!isValid) return res.status(401).json('email or password invalid')
+        if (!isValid) return res.status(401).send('email or password invalid')
 
-    const token = jwt.sign(
-        { userId: user.id },
-        process.env.JWT_SECRET,
-        { expiresIn: '7d' }
-    )
+        const token = jwt.sign(
+            { userId: user.id },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        )
 
-    res.json({ token })
+        return res.json({ token })
+    } catch (error) {
+        return res.status(400).json({ error: error.message })
+    }
 })
 
 module.exports = router

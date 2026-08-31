@@ -37,10 +37,10 @@ router.post('/', async (req, res) => {
             password_hash: data.password_hash,
         })
 
-        res.status(201).send('user created successfully !')
+        return res.status(201).send('user created successfully !')
 
     } catch (error) {
-        res.status(400).json({ error: error.message })
+        return res.status(400).json({ error: error.message })
     }
 })
 
@@ -52,10 +52,10 @@ router.get('/', (req, res) => {
 
         if (!users) return res.status(404).json({ error: 'no user found' })
 
-        res.status(200).json({ users })
+        return res.status(200).json({ users })
 
     } catch (error) {
-        res.status(400).json({ error: error.message })
+        return res.status(400).json({ error: error.message })
     }
 })
 
@@ -68,10 +68,10 @@ router.get('/email', (req, res) => {
 
         if (!user) return res.status(404).json({ error: 'email not found' })
 
-        res.status(200).json({ message: 'user found by email successfully', user })
+        return res.status(200).json({ message: 'user found by email successfully', user })
 
     } catch (error) {
-        res.status(400).json({ error: error.message })
+        return res.status(400).json({ error: error.message })
     }
 })
 
@@ -83,10 +83,10 @@ router.get('/:id', (req, res) => {
 
         if (!user) return res.status(404).json({ error: 'user not found' })
 
-        res.status(200).json({ user })
+        return res.status(200).json({ user })
 
     } catch (error) {
-        res.status(400).json({ error: error.message })
+        return res.status(400).json({ error: error.message })
     }
 })
 
@@ -100,10 +100,10 @@ router.patch('/:id', (req, res) => {
 
         if (result.changes === 0) return res.status(404).json({ error: 'user not found' })
 
-        res.status(200).json({ message: 'user updated successfully' })
+        return res.status(200).json({ message: 'user updated successfully' })
 
     } catch (error) {
-        res.status(400).json({ error: error.message })
+        return res.status(400).json({ error: error.message })
     }
 })
 
@@ -123,10 +123,10 @@ router.patch('/:id/password', async (req, res) => {
         stmt = db.prepare('UPDATE users SET password_hash = ? WHERE id = ?')
         stmt.run(user.password_hash, req.params.id)
 
-        res.status(200).json({ message: 'user\'s password updated successfully' })
+        return res.status(200).json({ message: 'user\'s password updated successfully' })
 
     } catch (error) {
-        res.status(400).json({ error: error.message })
+        return res.status(400).json({ error: error.message })
     }
 })
 
@@ -138,10 +138,10 @@ router.delete('/:id', (req, res) => {
 
         if (result.changes === 0) return res.status(404).json({ error: 'user not found' })
 
-        res.status(200).json({ message: 'user deleted successfully' })
+        return res.status(200).json({ message: 'user deleted successfully' })
 
     } catch (error) {
-        res.status(400).json({ error: error.message })
+        return res.status(400).json({ error: error.message })
     }
 })
 
