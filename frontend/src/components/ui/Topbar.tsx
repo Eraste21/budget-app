@@ -1,4 +1,4 @@
-import { Landmark, LogOut } from "lucide-react"
+import { Code2, LogOut } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../hooks/useAuth"
 
@@ -7,13 +7,13 @@ export const Topbar = () => {
     const navigate = useNavigate()
 
     return (
-        <div className="flex min-h-14 w-full items-center justify-between border-b border-indigo-100 bg-white px-6 shadow-sm sm:px-8 lg:px-12">
+        <div className="flex min-h-14 w-full items-center justify-between border-b border-indigo-100 bg-white px-4 shadow-sm sm:px-6 lg:px-8">
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/dashboard')}>
                 <span className="flex size-10 items-center justify-center rounded-xl bg-linear-to-br from-blue-600 to-violet-600 text-lg font-bold text-white shadow-sm shadow-indigo-200">
-                    <Landmark />
+                    <Code2 />
                 </span>
                 <h1 className="text-xl font-bold tracking-tight text-indigo-950">
-                    Budget App
+                    By deveraste21
                 </h1>
             </div>
 

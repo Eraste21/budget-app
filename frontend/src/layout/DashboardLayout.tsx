@@ -4,12 +4,12 @@ import { Topbar } from "../components/ui/Topbar"
 
 export const DashboardLayout = () => {
   return (
-    <div className="flex flex-col">
-      <header>
-        <Topbar />
-      </header>
-      <main className="flex flex-row">
+    <div className="flex flex-row">
+      <header className="w-72">
         <Sidebar />
+      </header>
+      <main className="flex flex-col w-full">
+        <Topbar />
         <Outlet />
       </main>
     </div>
