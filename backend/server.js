@@ -10,7 +10,7 @@ const cors = require('cors')
 
 // section des Routers
 const userRouter = require('./routes/users/users')
-const authRouter = require('./routes/users/auth')
+const authRouter = require('./routes/auth/auth')
 const transactionRouter = require('./routes/transactions/transactions')
 
 // instanciation de l'application express
