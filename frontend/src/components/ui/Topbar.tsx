@@ -1,0 +1,44 @@
+import { Landmark, LogOut } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../../hooks/useAuth"
+
+export const Topbar = () => {
+    const {logout} = useAuth()
+    const navigate = useNavigate()
+
+    return (
+        <div className="flex min-h-14 w-full items-center justify-between border-b border-indigo-100 bg-white px-6 shadow-sm sm:px-8 lg:px-12">
+            <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/dashboard')}>
+                <span className="flex size-10 items-center justify-center rounded-xl bg-linear-to-br from-blue-600 to-violet-600 text-lg font-bold text-white shadow-sm shadow-indigo-200">
+                    <Landmark />
+                </span>
+                <h1 className="text-xl font-bold tracking-tight text-indigo-950">
+                    Budget App
+                </h1>
+            </div>
+
+            <div className="flex items-center gap-3">
+                <div className="hidden text-right sm:block">
+                    <p className="text-xs text-slate-500">Mon compte</p>
+                    <p className="text-sm font-semibold text-slate-800">Eraste</p>
+                </div>
+                <div className="dropdown dropdown-end">
+                    <div tabIndex={0} className="flex size-10 cursor-pointer list-none items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 ring-2 ring-white transition hover:bg-indigo-200 focus:outline-none focus:ring-indigo-300 [&::-webkit-details-marker]:hidden">
+                        E
+                    </div>
+                    <ul tabIndex={-1} className="menu dropdown-content z-10 mt-3 w-52 rounded-xl border border-slate-200 bg-white p-2 shadow-lg shadow-slate-200/70">
+                        <li>
+                            <button
+                                className="flex w-full items-center gap-3 rounded-lg border border-dashed border-red-300 bg-red-50 px-3 py-2.5 text-sm font-medium text-red-700 transition hover:border-red-400 hover:bg-red-100"
+                                type="button"
+                            >
+                                <LogOut aria-hidden="true" className="size-4" onClick={logout} />
+                                Déconnexion
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    )
+}
