@@ -1,21 +1,27 @@
-import { useEffect, useState } from "react"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { LoginPage } from "./pages/LoginPage"
+import { RegisterPage } from "./pages/RegisterPage"
+import { DashboardPage } from "./pages/DashboardPage"
+import ProtectedRoute from "./components/ProtectedRoute"
 
 const App = () => {
-  const url = 'http://localhost:3001/'
-  const [data, setData] = useState('')
-  useEffect(() => {
-    fetch(url)
-      .then(res => res.json())
-      .then(data => setData(data.message))
-      .catch(err => console.error('Error :', err))
-  }, [])
+
   return (
-    <div>
-      <h1>
-        Budget App
-      </h1>
-      <span>Backend : {data}</span>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

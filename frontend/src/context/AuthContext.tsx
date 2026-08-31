@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { login as loginService } from "../services/authService";
-import type { User, AuthContextType, LoginInput } from "../types";
+import { login as loginService, register as registerService } from "../services/authService";
+import type { User, AuthContextType, LoginInput, RegisterInput } from "../types";
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -18,6 +18,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(false)
     }, [])
 
+    // on crée un compte
+    const register = async (data: RegisterInput) => {
+        await registerService(data)
+    }
+
     // on envoie le token généré à la connexion dans le localStorage
     const login = async (data: LoginInput) => {
         const response = await loginService(data)
@@ -33,7 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     return (
-        <AuthContext.Provider value={{user, token, isLoading, login, logout}}>
+        <AuthContext.Provider value={{user, token, isLoading, register, login, logout}}>
             {children}
         </AuthContext.Provider>
     )
