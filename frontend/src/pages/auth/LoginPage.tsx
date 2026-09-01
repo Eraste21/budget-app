@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useAuth } from "../hooks/useAuth"
+import { useAuth } from "../../hooks/auth/useAuth"
 import { useNavigate } from "react-router-dom"
 
 export const LoginPage = () => {
@@ -7,7 +7,7 @@ export const LoginPage = () => {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-  const {login} = useAuth()
+  const { login } = useAuth()
 
   const navigate = useNavigate()
 
@@ -16,7 +16,7 @@ export const LoginPage = () => {
     setError('')
 
     try {
-      await login({email, password})
+      await login({ email, password })
       navigate('/dashboard')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur de connexion')
@@ -35,7 +35,7 @@ export const LoginPage = () => {
           <p className="mb-4 text-sm text-red-600">{error}</p>
         )}
 
-        <form 
+        <form
           className="space-y-5"
           onSubmit={handleSubmit}
         >

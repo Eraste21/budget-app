@@ -1,14 +1,18 @@
 import { Landmark, LogOut } from "lucide-react"
 import { SidebarLink } from "./SidebarLink"
 import { useLocation } from "react-router-dom"
+import { useAuth } from "../../hooks/auth/useAuth"
 
 export const Sidebar = () => {
     const location = useLocation()
+    const { logout } = useAuth()
+    
     const links = [
-        {name: 'Dashboard', page: '/dashboard'},
-        {name: 'Transactions', page: '/transactions'},
-        {name: 'Statistiques', page: '/statistics'}
+        { name: 'Dashboard', page: '/dashboard' },
+        { name: 'Transactions', page: '/transactions' },
+        { name: 'Statistiques', page: '/statistics' }
     ]
+
     return (
         <aside className="flex min-h-screen flex-col border-r border-indigo-100 bg-white px-5 py-4">
             <div className="flex items-center gap-3 pl-4">
@@ -28,6 +32,7 @@ export const Sidebar = () => {
             <button
                 className="mt-6 flex w-full items-center gap-3 rounded-lg border border-dashed border-red-300 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700 transition hover:border-red-400 hover:bg-red-100 cursor-pointer"
                 type="button"
+                onClick={logout}
             >
                 <LogOut aria-hidden="true" className="size-5" />
                 Déconnexion

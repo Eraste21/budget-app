@@ -1,16 +1,16 @@
 import { createContext, useState } from "react";
 import type { ReactNode } from "react";
-import type { Transaction, TransactionContextType, TransactionInput } from "../types";
-import { 
-    createTransaction as createTransactionService, 
-    getTransactions as getTransactionsService, 
+import type { Transaction, TransactionContextType, TransactionInput } from "../../types";
+import {
+    createTransaction as createTransactionService,
+    getTransactions as getTransactionsService,
     updateTransaction as updateTransactionService,
     deleteTransaction as deleteTransactionService
-} from "../services/transactions/transactionService";
+} from "../../services/transactions/transactionService";
 
 export const TransactionContext = createContext<TransactionContextType | undefined>(undefined)
 
-export const TransactionProvider = ({children}: {children: ReactNode}) => {
+export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     const [transactions, setTransactions] = useState<Transaction[] | null>(null)
 
     // créer une transaction
@@ -38,7 +38,7 @@ export const TransactionProvider = ({children}: {children: ReactNode}) => {
     }
 
     return (
-        <TransactionContext.Provider value={{transactions, createTransaction, refreshTransactions, updateTransaction, deleteTransaction}}>
+        <TransactionContext.Provider value={{ transactions, createTransaction, refreshTransactions, updateTransaction, deleteTransaction }}>
             {children}
         </TransactionContext.Provider>
     )

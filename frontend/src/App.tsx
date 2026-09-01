@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-import { LoginPage } from "./pages/LoginPage"
-import { RegisterPage } from "./pages/RegisterPage"
-import { DashboardPage } from "./pages/DashboardPage"
+import { LoginPage } from "./pages/auth/LoginPage"
+import { RegisterPage } from "./pages/auth/RegisterPage"
 import ProtectedRoute from "./components/ProtectedRoute"
 import { DashboardLayout } from "./layout/DashboardLayout"
-import { TransactionsPage } from "./pages/TransactionsPage"
-import { StatisticsPage } from "./pages/StatisticsPage"
+import { DashboardPage } from "./pages/dashboard/DashboardPage"
+import { TransactionsPage } from "./pages/transactions/TransactionsPage"
+import { StatisticsPage } from "./pages/statistics/StatisticsPage"
 
 const App = () => {
 

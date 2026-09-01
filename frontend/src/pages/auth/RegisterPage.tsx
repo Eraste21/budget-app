@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useAuth } from "../hooks/useAuth"
+import { useAuth } from "../../hooks/auth/useAuth"
 
 export const RegisterPage = () => {
     const [username, setUsername] = useState('')
@@ -16,17 +16,17 @@ export const RegisterPage = () => {
     const handleSubmit = async (e: React.SubmitEvent) => {
         e.preventDefault()
         setError('')
-        
+
         if (password !== confirmPassword) return setError('Les mots de passe ne correspondent pas')
 
         try {
-            await register({ username, email, password})
+            await register({ username, email, password })
             navigate('/login')
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Une erreur est survenue')
         }
     }
-    
+
     return (
         <main className="flex min-h-screen items-center justify-center bg-linear-to-br from-blue-50 via-indigo-50 to-violet-100 px-4 py-10">
             <section className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl shadow-indigo-200/50">
@@ -41,7 +41,7 @@ export const RegisterPage = () => {
                     <p className="mb-4 text-sm text-red-600">{error}</p>
                 )}
 
-                <form 
+                <form
                     className="space-y-5"
                     onSubmit={handleSubmit}
                 >
