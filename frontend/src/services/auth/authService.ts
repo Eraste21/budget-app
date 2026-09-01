@@ -1,5 +1,5 @@
-import API_URL from "./api";
-import type { RegisterInput, LoginInput, LoginResponse } from "../types";
+import API_URL from "../api";
+import type { RegisterInput, LoginInput, LoginResponse } from "../../types";
 
 export const register = async (data: RegisterInput): Promise<void> => {
     const response = await fetch(`${API_URL}/auth/register`, {

@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { login as loginService, register as registerService } from "../services/authService";
+import { login as loginService, register as registerService } from "../services/auth/authService";
 import type { User, AuthContextType, LoginInput, RegisterInput } from "../types";
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     return (
-        <AuthContext.Provider value={{user, token, isLoading, register, login, logout}}>
+        <AuthContext.Provider value={{ user, token, isLoading, register, login, logout }}>
             {children}
         </AuthContext.Provider>
     )
