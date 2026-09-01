@@ -47,5 +47,14 @@ export interface AuthContextType {
     isLoading: boolean;
     register: (data: RegisterInput) => Promise<void>;
     login: (data: LoginInput) => Promise<void>;
-    logout: ()=> void;
+    logout: () => void;
+}
+
+// contexte des transactions
+export interface TransactionContextType {
+    transactions: Transaction[] | null;
+    createTransaction: (data: TransactionInput) => Promise<void>;
+    refreshTransactions: () => Promise<void>;
+    updateTransaction: (id: number, data: TransactionInput) => Promise<void>;
+    deleteTransaction: (id: number) => Promise<void>;
 }

@@ -1,5 +1,5 @@
-import type { Transaction, TransactionInput } from "../../types";
 import API_URL from "../api";
+import type { Transaction, TransactionInput } from "../../types";
 
 const getToken = () => localStorage.getItem('token')
 
@@ -8,7 +8,7 @@ const authHeaders = () => ({
     'Authorization': `Bearer ${getToken}`,
 })
 
-export const createTransactions = async (data: TransactionInput): Promise<void> => {
+export const createTransaction = async (data: TransactionInput): Promise<void> => {
     const response = await fetch(`${API_URL}/transactions`, {
         method: 'POST',
         headers: authHeaders(),
@@ -35,7 +35,7 @@ export const getTransactions = async (): Promise<Transaction[]> => {
     return data.transactions
 }
 
-export const updateTransactions = async (id: number, data: TransactionInput): Promise<void> => {
+export const updateTransaction = async (id: number, data: TransactionInput): Promise<void> => {
     const response = await fetch(`${API_URL}/transactions/${id}`, {
         method: 'PATCH',
         headers: authHeaders(),
@@ -44,11 +44,11 @@ export const updateTransactions = async (id: number, data: TransactionInput): Pr
 
     if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.error || 'Erreur lors de la récupération des transactions')
+        throw new Error(error.error || 'Erreur lors de la mise à jour de la transaction')
     }
 }
 
-export const deleteTransactions = async (id: number): Promise<void> => {
+export const deleteTransaction = async (id: number): Promise<void> => {
     const response = await fetch(`${API_URL}/transactions/${id}`, {
         method: 'DELETE',
         headers: authHeaders(),
@@ -56,6 +56,6 @@ export const deleteTransactions = async (id: number): Promise<void> => {
 
     if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.error || 'Erreur lors de la récupération des transactions')
+        throw new Error(error.error || 'Erreur lors de la suppression de la transaction')
     }
 }
