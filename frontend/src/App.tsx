@@ -5,6 +5,7 @@ import { DashboardPage } from "./pages/DashboardPage"
 import ProtectedRoute from "./components/ProtectedRoute"
 import { DashboardLayout } from "./layout/DashboardLayout"
 import { TransactionsPage } from "./pages/TransactionsPage"
+import { StatisticsPage } from "./pages/StatisticsPage"
 
 const App = () => {
 
@@ -22,6 +23,7 @@ const App = () => {
         >
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/transactions" element={<TransactionsPage />} />
+          <Route path="/statistics" element={<StatisticsPage />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Route>
       </Routes>

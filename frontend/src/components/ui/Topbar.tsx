@@ -7,7 +7,7 @@ export const Topbar = () => {
     const navigate = useNavigate()
 
     return (
-        <div className="flex min-h-14 w-full items-center justify-between border-b border-indigo-100 bg-white px-4 shadow-sm sm:px-6 lg:px-8">
+        <div className="flex min-h-14 w-full items-center justify-between border-b border-indigo-100 bg-white px-4 py-2 shadow-sm sm:px-6 lg:px-8">
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/dashboard')}>
                 <span className="flex size-10 items-center justify-center rounded-xl bg-linear-to-br from-blue-600 to-violet-600 text-lg font-bold text-white shadow-sm shadow-indigo-200">
                     <Code2 />
