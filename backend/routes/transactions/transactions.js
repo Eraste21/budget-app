@@ -51,7 +51,7 @@ router.get('/:id', authMiddleware, (req, res) => {
         const stmt = db.prepare('SELECT * FROM transactions WHERE id = ? AND user_id = ?')
         const transaction = stmt.get(transactionId, userId)
 
-        if (!transaction) return res.status(404).send('transaction not found')
+        if (!transaction) return res.status(404).json({error: 'no transaction found'})
 
         return res.status(200).json({ transaction })
     } catch (error) {
@@ -71,7 +71,7 @@ router.patch('/:id', authMiddleware, (req, res) => {
         `)
         const result = stmt.run(date, category, amount, type, frequency, description, transactionId, userId)
 
-        if (result.changes === 0) return res.status(404).json({ error: 'transaction not found' })
+        if (result.changes === 0) return res.status(404).json({error: 'no transaction found'})
 
         return res.status(200).json({ message: 'transaction updated successfully' })
     } catch (error) {
@@ -87,7 +87,7 @@ router.delete('/:id', authMiddleware, (req, res) => {
         const stmt = db.prepare('DELETE FROM transactions WHERE id = ? AND user_id = ?')
         const result = stmt.run(transactionId, userId)
 
-        if (result.changes === 0) return res.status(404).json({ error: 'transaction not found' })
+        if (result.changes === 0) return res.status(404).json({ error: 'no transaction found' })
 
         return res.status(200).json({ message: 'transaction deleted successfully' })
     } catch (error) {

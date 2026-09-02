@@ -27,14 +27,14 @@ const comparePassword = async (prev, password) => {
 // créer un utilisateur
 router.post('/', async (req, res) => {
     try {
-        const data = req.body
-        data.password_hash = await hashPassword(data.password_hash)
+        const { username, email } = req.body
+        const password = await hashPassword(req.body.password)
 
-        const stmt = db.prepare('INSERT INTO users (username, email, password_hash) VALUES (@username, @email, @password_hash)')
+        const stmt = db.prepare('INSERT INTO users (username, email, password_hash) VALUES (@username, @email, @password)')
         stmt.run({
-            username: data.username,
-            email: data.email,
-            password_hash: data.password_hash,
+            username,
+            email,
+            password
         })
 
         return res.status(201).send('user created successfully !')
@@ -63,7 +63,7 @@ router.get('/', (req, res) => {
 router.get('/email', (req, res) => {
     try {
         const { email } = req.query
-        const stmt = db.prepare('SELECT * FROM users WHERE email = ?')
+        const stmt = db.prepare('SELECT id, username, email, created_at FROM users WHERE email = ?')
         const user = stmt.get(email)
 
         if (!user) return res.status(404).json({ error: 'email not found' })
@@ -81,7 +81,7 @@ router.get('/:id', (req, res) => {
         const stmt = db.prepare('SELECT * FROM users WHERE id = ?')
         const user = stmt.get(req.params.id)
 
-        if (!user) return res.status(404).json({ error: 'user not found' })
+        if (!user) return res.status(404).json({ error: 'no user found' })
 
         return res.status(200).json({ user })
 
@@ -98,7 +98,7 @@ router.patch('/:id', (req, res) => {
         const stmt = db.prepare('UPDATE users SET username = ?, email = ? WHERE id = ?')
         const result = stmt.run(username, email, req.params.id)
 
-        if (result.changes === 0) return res.status(404).json({ error: 'user not found' })
+        if (result.changes === 0) return res.status(404).json({ error: 'no user found' })
 
         return res.status(200).json({ message: 'user updated successfully' })
 
@@ -112,7 +112,7 @@ router.patch('/:id/password', async (req, res) => {
     try {
         let stmt = db.prepare('SELECT * FROM users WHERE id = ?')
         const user = stmt.get(req.params.id)
-        if (!user) return res.status(404).json({ error: 'user not found' })
+        if (!user) return res.status(404).json({ error: 'no user found' })
 
         const { prev, password } = req.body
         const isValid = await comparePassword(prev, user.password_hash)
@@ -136,7 +136,7 @@ router.delete('/:id', (req, res) => {
         const stmt = db.prepare('DELETE FROM users WHERE id = ?')
         const result = stmt.run(req.params.id)
 
-        if (result.changes === 0) return res.status(404).json({ error: 'user not found' })
+        if (result.changes === 0) return res.status(404).json({ error: 'no user found' })
 
         return res.status(200).json({ message: 'user deleted successfully' })
 

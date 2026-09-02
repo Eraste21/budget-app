@@ -11,6 +11,7 @@ const cors = require('cors')
 // section des Routers
 const userRouter = require('./routes/users/users')
 const authRouter = require('./routes/auth/auth')
+const budgetRouter = require('./routes/budgets/budgets')
 const transactionRouter = require('./routes/transactions/transactions')
 
 // instanciation de l'application express
@@ -21,6 +22,7 @@ app.use(express.json())
 // utilisation des routes
 app.use('/users', userRouter)
 app.use('/auth', authRouter)
+app.use('/budgets', budgetRouter)
 app.use('/transactions', transactionRouter)
 
 const PORT = process.env.PORT || 3001

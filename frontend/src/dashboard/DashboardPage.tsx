@@ -9,7 +9,7 @@ export const DashboardPage = () => {
       </section>
 
       <section className="mb-5">
-        <h2 className="text-lg font-semibold text-slate-800">Budget :</h2>
+        <h2 className="text-lg font-semibold text-slate-800">Solde :</h2>
       </section>
 
       <section className="mb-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -26,7 +26,7 @@ export const DashboardPage = () => {
           <span className="mt-3 block text-2xl font-bold text-blue-600">X €</span>
         </div>
         <div className="rounded-2xl border border-indigo-100 bg-linear-to-br from-blue-600 to-violet-600 p-5 text-white shadow-md shadow-indigo-200">
-          <span className="block text-sm font-medium text-indigo-100">Solde</span>
+          <span className="block text-sm font-medium text-indigo-100">Budget</span>
           <span className="mt-3 block text-2xl font-bold">X €</span>
         </div>
       </section>
