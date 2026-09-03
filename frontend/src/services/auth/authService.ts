@@ -30,7 +30,7 @@ export const login = async (data: LoginInput): Promise<LoginResponse> => {
 }
 
 export const info = async (): Promise<User> => {
-    const response = await fetch(`${API_URL}/auth/me`, {
+    const response = await fetch(`${API_URL}/auth/profile`, {
         headers: authHeaders()
     })
 
