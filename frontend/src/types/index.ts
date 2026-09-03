@@ -63,6 +63,7 @@ export interface AuthContextType {
     register: (data: RegisterInput) => Promise<void>;
     login: (data: LoginInput) => Promise<void>;
     logout: () => void;
+    info: () => void;
 }
 
 // contexte des budgets

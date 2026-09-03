@@ -47,7 +47,7 @@ router.post('/', async (req, res) => {
 // récupérer tous les utilisateurs
 router.get('/', (req, res) => {
     try {
-        const stmt = db.prepare('SELECT * FROM users')
+        const stmt = db.prepare('SELECT id, username, email, created_at FROM users')
         const users = stmt.all()
 
         if (!users) return res.status(404).json({ error: 'no user found' })

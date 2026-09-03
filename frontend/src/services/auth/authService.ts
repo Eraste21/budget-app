@@ -1,5 +1,5 @@
-import API_URL from "../api";
-import type { RegisterInput, LoginInput, LoginResponse } from "../../types";
+import API_URL, { authHeaders } from "../api";
+import type { RegisterInput, LoginInput, LoginResponse, User } from "../../types";
 
 export const register = async (data: RegisterInput): Promise<void> => {
     const response = await fetch(`${API_URL}/auth/register`, {
@@ -27,4 +27,18 @@ export const login = async (data: LoginInput): Promise<LoginResponse> => {
     }
 
     return response.json()
+}
+
+export const info = async (): Promise<User> => {
+    const response = await fetch(`${API_URL}/auth/me`, {
+        headers: authHeaders()
+    })
+
+    if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Erreur lors de la récupération du profil')
+    }
+
+    const data = await response.json()
+    return data.user
 }

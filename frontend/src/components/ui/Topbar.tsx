@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../hooks/auth/useAuth"
 
 export const Topbar = () => {
+    const { user } = useAuth()
     const { logout } = useAuth()
     const navigate = useNavigate()
 
@@ -20,11 +21,11 @@ export const Topbar = () => {
             <div className="flex shrink-0 items-center gap-3">
                 <div className="hidden text-right sm:block">
                     <p className="text-xs text-slate-500">Mon compte</p>
-                    <p className="text-sm font-semibold text-slate-800">Eraste</p>
+                    <p className="text-sm font-semibold text-slate-800">{user?.username}</p>
                 </div>
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} className="flex size-10 cursor-pointer list-none items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700 ring-2 ring-white transition hover:bg-indigo-200 focus:outline-none focus:ring-indigo-300 [&::-webkit-details-marker]:hidden">
-                        E
+                        {user?.username?.[0]?.toUpperCase()}
                     </div>
                     <ul tabIndex={-1} className="menu dropdown-content z-10 mt-3 w-52 rounded-xl border border-slate-200 bg-white p-2 shadow-lg shadow-slate-200/70">
                         <li>

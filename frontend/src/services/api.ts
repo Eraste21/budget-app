@@ -6,5 +6,5 @@ export default API_URL
 
 export const authHeaders = () => ({
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${getToken}`,
+    'Authorization': `Bearer ${getToken()}`,
 })
