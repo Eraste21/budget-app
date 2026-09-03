@@ -19,8 +19,23 @@ export interface Transaction {
     user_id: number;
 }
 
+// budget
+export interface Budget {
+    id: number;
+    amount: number;
+    created_at: string;
+    user_id: number;
+}
+
+// delta pour le budget
+export interface Delta {
+    delta: number;
+}
+
 // pour créer une transaction, on omet les id
 export type TransactionInput = Omit<Transaction, 'id' | 'user_id'>
+
+export type BudgetInput = Omit<Budget, 'id' | 'user_id'>
 
 // pour récupérer le token
 export interface LoginResponse {
@@ -49,6 +64,9 @@ export interface AuthContextType {
     login: (data: LoginInput) => Promise<void>;
     logout: () => void;
 }
+
+// contexte des budgets
+export interface BudgetContextType { }
 
 // contexte des transactions
 export interface TransactionContextType {

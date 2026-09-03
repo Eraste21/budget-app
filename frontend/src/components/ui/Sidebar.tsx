@@ -9,6 +9,7 @@ export const Sidebar = () => {
     
     const links = [
         { name: 'Dashboard', page: '/dashboard' },
+        { name: 'Budgets', page: '/budgets' },
         { name: 'Transactions', page: '/transactions' },
         { name: 'Statistiques', page: '/statistics' }
     ]

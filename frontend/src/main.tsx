@@ -4,13 +4,16 @@ import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './context/auth/AuthContext.tsx'
 import { TransactionProvider } from './context/transactions/TransactionContext.tsx'
+import { BudgetProvider } from './context/budgets/BudgetContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
-      <TransactionProvider>
-        <App />
-      </TransactionProvider>
+      <BudgetProvider>
+        <TransactionProvider>
+          <App />
+        </TransactionProvider>
+      </BudgetProvider>
     </AuthProvider>
   </StrictMode>,
 )

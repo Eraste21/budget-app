@@ -6,6 +6,7 @@ import { DashboardLayout } from "./layout/DashboardLayout"
 import { DashboardPage } from "./pages/dashboard/DashboardPage"
 import { TransactionsPage } from "./pages/transactions/TransactionsPage"
 import { StatisticsPage } from "./pages/statistics/StatisticsPage"
+import { BudgetsPage } from "./pages/budget/BudgetsPage"
 
 const App = () => {
 
@@ -22,6 +23,7 @@ const App = () => {
           }
         >
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/budgets" element={<BudgetsPage />} />
           <Route path="/transactions" element={<TransactionsPage />} />
           <Route path="/statistics" element={<StatisticsPage />} />
           <Route path="*" element={<Navigate to="/login" replace />} />

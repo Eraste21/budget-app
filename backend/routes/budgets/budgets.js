@@ -119,7 +119,7 @@ router.patch('/current/adjust', authMiddleware, (req, res) => {
     }
 })
 
-// supprimer le budget courant
+// supprimer un budget
 router.delete('/:id', authMiddleware, (req, res) => {
     const userId = req.userId
     const {id} = req.params

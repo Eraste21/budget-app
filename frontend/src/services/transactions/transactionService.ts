@@ -1,13 +1,7 @@
-import API_URL from "../api";
+import API_URL, { authHeaders } from "../api";
 import type { Transaction, TransactionInput } from "../../types";
 
-const getToken = () => localStorage.getItem('token')
-
-const authHeaders = () => ({
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${getToken}`,
-})
-
+// créer une transaciton
 export const createTransaction = async (data: TransactionInput): Promise<void> => {
     const response = await fetch(`${API_URL}/transactions`, {
         method: 'POST',
@@ -21,6 +15,7 @@ export const createTransaction = async (data: TransactionInput): Promise<void> =
     }
 }
 
+// lister toutes les transacations
 export const getTransactions = async (): Promise<Transaction[]> => {
     const response = await fetch(`${API_URL}/transactions`, {
         headers: authHeaders(),
@@ -35,6 +30,7 @@ export const getTransactions = async (): Promise<Transaction[]> => {
     return data.transactions
 }
 
+// mettre à jour une transaction
 export const updateTransaction = async (id: number, data: TransactionInput): Promise<void> => {
     const response = await fetch(`${API_URL}/transactions/${id}`, {
         method: 'PATCH',
@@ -48,6 +44,7 @@ export const updateTransaction = async (id: number, data: TransactionInput): Pro
     }
 }
 
+// supprimer une transaction
 export const deleteTransaction = async (id: number): Promise<void> => {
     const response = await fetch(`${API_URL}/transactions/${id}`, {
         method: 'DELETE',
