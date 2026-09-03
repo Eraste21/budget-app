@@ -11,28 +11,28 @@ db.exec(`
         created_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
     
-        CREATE TABLE IF NOT EXISTS budgets (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            amount REAL NOT NULL,
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP, 
-            user_id INTEGER NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users(id)
-        );
-        
-        CREATE TABLE IF NOT EXISTS transactions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            date TEXT NOT NULL,
-            category TEXT NOT NULL,
-            amount REAL NOT NULL,
-            type TEXT CHECK(type IN ('entrée', 'sortie')) NOT NULL,
-            frequency TEXT CHECK(frequency IN ('mensuelle', 'ponctuelle')) NOT NULL,
-            description TEXT,
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-            user_id INTEGER NOT NULL,
-            budget_id INTEGER NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users(id),
-            FOREIGN KEY (budget_id) REFERENCES budgets(id)
-        );
-    `)
+    CREATE TABLE IF NOT EXISTS budgets (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        amount REAL NOT NULL,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP, 
+        user_id INTEGER NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+    
+    CREATE TABLE IF NOT EXISTS transactions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        date TEXT NOT NULL,
+        category TEXT NOT NULL,
+        amount REAL NOT NULL,
+        type TEXT CHECK(type IN ('entrée', 'sortie')) NOT NULL,
+        frequency TEXT CHECK(frequency IN ('mensuelle', 'ponctuelle')) NOT NULL,
+        description TEXT,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        user_id INTEGER NOT NULL,
+        budget_id INTEGER NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (budget_id) REFERENCES budgets(id)
+    );
+`)
 
 module.exports = db

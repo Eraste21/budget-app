@@ -72,7 +72,7 @@ router.post('/login', async (req, res) => {
 })
 
 // récupérer les informations de l'utilisateur connecté
-router.get('/me', authMiddleware, (req, res) => {
+router.get('/profile', authMiddleware, (req, res) => {
     const id = req.userId
     try {
         const stmt = db.prepare('SELECT id, username, email, created_at FROM users WHERE id = ?')
