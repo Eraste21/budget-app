@@ -17,6 +17,7 @@ export interface Transaction {
     description: string;
     created_at: string;
     user_id: number;
+    budget_id: number | null;
 }
 
 // budget
@@ -33,7 +34,7 @@ export interface Delta {
 }
 
 // pour créer une transaction, on omet les id
-export type TransactionInput = Omit<Transaction, 'id' | 'user_id'>
+export type TransactionInput = Omit<Transaction, 'id' | 'user_id' | 'budget_id'>
 
 export type BudgetInput = Omit<Budget, 'id' | 'user_id'>
 
@@ -63,7 +64,6 @@ export interface AuthContextType {
     register: (data: RegisterInput) => Promise<void>;
     login: (data: LoginInput) => Promise<void>;
     logout: () => void;
-    info: () => void;
 }
 
 // contexte des budgets

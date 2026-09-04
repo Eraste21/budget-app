@@ -29,7 +29,7 @@ db.exec(`
         description TEXT,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         user_id INTEGER NOT NULL,
-        budget_id INTEGER NOT NULL,
+        budget_id INTEGER,
         FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (budget_id) REFERENCES budgets(id)
     );

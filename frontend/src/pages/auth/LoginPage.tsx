@@ -83,7 +83,7 @@ export const LoginPage = () => {
           </div>
 
           <button
-            className="w-full rounded-lg bg-linear-to-r from-blue-600 to-violet-600 px-4 py-3 font-semibold text-white shadow-sm transition hover:from-blue-700 hover:to-violet-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/25"
+            className="w-full rounded-lg bg-linear-to-r from-blue-600 to-violet-600 px-4 py-3 font-semibold text-white shadow-sm transition hover:from-blue-700 hover:to-violet-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/25 cursor-pointer"
             type="submit"
           >
             Se connecter

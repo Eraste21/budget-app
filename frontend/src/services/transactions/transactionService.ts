@@ -30,6 +30,21 @@ export const getTransactions = async (): Promise<Transaction[]> => {
     return data.transactions
 }
 
+// lister toutes les transacations ( via le filtre )
+export const getTransactionsFilter = async (query: string): Promise<Transaction[]> => {
+    const response = await fetch(`${API_URL}/transactions/${query}`, {
+        headers: authHeaders(),
+    })
+
+    if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Erreur lors de la récupération des transactions')
+    }
+
+    const data = await response.json()
+    return data.transactions
+}
+
 // mettre à jour une transaction
 export const updateTransaction = async (id: number, data: TransactionInput): Promise<void> => {
     const response = await fetch(`${API_URL}/transactions/${id}`, {
