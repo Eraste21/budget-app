@@ -1,75 +1,120 @@
-# React + TypeScript + Vite
+# Budget App — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface web React de Budget App. Elle fournit les écrans d’authentification et l’espace protégé de gestion des budgets et transactions.
 
-Currently, two official plugins are available:
+## Stack technique
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19
+- TypeScript 6
+- Vite 8
+- React Router 7
+- Tailwind CSS 4
+- daisyUI 5
+- Lucide React
 
-## React Compiler
+## Structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+frontend/src/
+├── components/
+│   ├── budgets/          # Formulaire de budget
+│   ├── transactions/     # Formulaire et liste des transactions
+│   └── ui/               # Sidebar, liens et top bar
+├── context/
+│   ├── auth/             # État d’authentification
+│   ├── budgets/          # État des budgets
+│   └── transactions/     # État et actions des transactions
+├── hooks/                # Accès aux contextes
+├── layout/               # Structure du tableau de bord
+├── pages/                # Pages associées aux routes
+├── services/             # Appels HTTP vers le backend
+├── types/                # Types TypeScript partagés
+├── App.tsx               # Déclaration des routes
+└── main.tsx              # Montage de React et des providers
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## Prérequis
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Node.js dans une version récente
+- npm
+- Backend Budget App lancé sur `http://localhost:3001`
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Installation
 
+Depuis le dossier `frontend` :
+
+```powershell
+npm install
 ```
+
+## Lancement
+
+Mode développement :
+
+```powershell
+npm run dev
+```
+
+Vite affiche l’adresse locale à ouvrir dans le navigateur.
+
+Prévisualisation de la version compilée :
+
+```powershell
+npm run build
+npm run preview
+```
+
+## Routes
+
+Routes publiques :
+
+- `/login` : connexion ;
+- `/register` : création d’un compte.
+
+Routes protégées :
+
+- `/dashboard` : synthèse du budget ;
+- `/budgets` : gestion des budgets ;
+- `/transactions` : gestion des transactions ;
+- `/statistics` : statistiques.
+
+Les routes protégées redirigent vers `/login` lorsqu’aucun jeton n’est disponible.
+
+## Authentification
+
+Après une connexion réussie, le JWT renvoyé par le backend est enregistré dans `localStorage` sous la clé `token`.
+
+Les services protégés transmettent ensuite :
+
+```http
+Authorization: Bearer jeton_jwt
+```
+
+Au chargement de l’application, le profil est demandé au backend pour vérifier la session existante.
+
+## Services
+
+- `services/api.ts` centralise l’URL de l’API, les en-têtes authentifiés et la vérification des réponses HTTP ;
+- `services/auth/authService.ts` gère l’inscription, la connexion et le profil ;
+- `services/budgets/budgetService.ts` gère les budgets ;
+- `services/transactions/transactionService.ts` gère les transactions et leurs filtres.
+
+L’URL du backend est actuellement définie directement dans `services/api.ts` :
+
+```text
+http://localhost:3001
+```
+
+## Scripts npm
+
+- `npm run dev` : démarre Vite en développement ;
+- `npm run build` : vérifie TypeScript et génère la version de production ;
+- `npm run lint` : lance ESLint ;
+- `npm run preview` : sert localement la version compilée.
+
+## État actuel
+
+- Le contexte d’authentification est connecté aux services.
+- Le contexte des transactions fournit les opérations CRUD.
+- Le contexte des budgets est encore une base vide à compléter.
+- Aucune suite de tests frontend n’est actuellement configurée.

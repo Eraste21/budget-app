@@ -1,4 +1,4 @@
-import API_URL, { authHeaders } from "../api";
+import API_URL, { authHeaders, checkResponse } from "../api";
 import type { RegisterInput, LoginInput, LoginResponse, User } from "../../types";
 
 export const register = async (data: RegisterInput): Promise<void> => {
@@ -8,10 +8,7 @@ export const register = async (data: RegisterInput): Promise<void> => {
         body: JSON.stringify(data),
     })
 
-    if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Erreur lors de l\'inscription')
-    }
+    await checkResponse(response, 'Erreur lors de l\'inscription')
 }
 
 export const login = async (data: LoginInput): Promise<LoginResponse> => {
@@ -21,10 +18,7 @@ export const login = async (data: LoginInput): Promise<LoginResponse> => {
         body: JSON.stringify(data),
     })
 
-    if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Email ou mot de passe incorrect')
-    }
+    await checkResponse(response, 'Email ou mot de passe incorrect')
 
     return response.json()
 }
@@ -34,10 +28,7 @@ export const info = async (): Promise<User> => {
         headers: authHeaders()
     })
 
-    if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Erreur lors de la récupération du profil')
-    }
+    await checkResponse(response, 'Erreur lors de la récupération du profil')
 
     const data = await response.json()
     return data.user

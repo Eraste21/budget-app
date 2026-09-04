@@ -1,4 +1,4 @@
-import API_URL, { authHeaders } from "../api";
+import API_URL, { authHeaders, checkResponse } from "../api";
 import type { Transaction, TransactionInput } from "../../types";
 
 // créer une transaciton
@@ -9,10 +9,7 @@ export const createTransaction = async (data: TransactionInput): Promise<void> =
         body: JSON.stringify(data)
     })
 
-    if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Erreur lors de la création de la transaction')
-    }
+    await checkResponse(response, 'Erreur lors de la création de la transaction')
 }
 
 // lister toutes les transacations
@@ -21,10 +18,7 @@ export const getTransactions = async (): Promise<Transaction[]> => {
         headers: authHeaders(),
     })
 
-    if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Erreur lors de la récupération des transactions')
-    }
+    await checkResponse(response, 'Erreur lors de la récupération des transactions')
 
     const data = await response.json()
     return data.transactions
@@ -36,10 +30,7 @@ export const getTransactionsFilter = async (query?: string): Promise<Transaction
         headers: authHeaders(),
     })
 
-    if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Erreur lors de la récupération des transactions')
-    }
+    await checkResponse(response, 'Erreur lors de la récupération des transactions')
 
     const data = await response.json()
     return data.transactions
@@ -53,10 +44,7 @@ export const updateTransaction = async (id: number, data: TransactionInput): Pro
         body: JSON.stringify(data)
     })
 
-    if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Erreur lors de la mise à jour de la transaction')
-    }
+    await checkResponse(response, 'Erreur lors de la mise à jour de la transaction')
 }
 
 // supprimer une transaction
@@ -66,8 +54,5 @@ export const deleteTransaction = async (id: number): Promise<void> => {
         headers: authHeaders(),
     })
 
-    if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Erreur lors de la suppression de la transaction')
-    }
+    await checkResponse(response, 'Erreur lors de la suppression de la transaction')
 }
