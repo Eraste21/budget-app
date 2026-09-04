@@ -31,8 +31,8 @@ export const getTransactions = async (): Promise<Transaction[]> => {
 }
 
 // lister toutes les transacations ( via le filtre )
-export const getTransactionsFilter = async (query: string): Promise<Transaction[]> => {
-    const response = await fetch(`${API_URL}/transactions/${query}`, {
+export const getTransactionsFilter = async (query?: string): Promise<Transaction[]> => {
+    const response = await fetch(`${API_URL}/transactions/?${query}`, {
         headers: authHeaders(),
     })
 

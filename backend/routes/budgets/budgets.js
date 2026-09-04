@@ -48,6 +48,32 @@ router.get('/current', authMiddleware, (req, res) => {
     }
 })
 
+// calucl du total des dépenses sur le budget actif
+router.get('/current/spent', authMiddleware, (req, res) => {
+    const userId = req.userId
+    try {
+        let stmt = db.prepare('SELECT * FROM budgets WHERE user_id = ? ORDER BY created_at DESC LIMIT 1')
+        const currentBudget = stmt.get(userId)
+
+        if (!currentBudget) return res.status(404).json({ error: 'no budget found' })
+
+        const budgetId = currentBudget.id
+
+        stmt = db.prepare(`
+            SELECT SUM(amount) AS total 
+            FROM transactions 
+            WHERE user_id = ? AND budget_id = ? AND type = 'sortie'
+        `)
+
+        const result = stmt.get(userId, budgetId, type)
+        const spent = result.total ?? 0
+
+        return res.status(200).json({ spent })
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+})
+
 // récupérer 1 budget
 router.get('/:id', authMiddleware, (req, res) => {
     const userId = req.userId
@@ -56,7 +82,7 @@ router.get('/:id', authMiddleware, (req, res) => {
         const stmt = db.prepare('SELECT * FROM budgets WHERE id = ? AND user_id = ?')
         const budget = stmt.get(id, userId)
 
-        if (!budget) return res.status(404).json({error: 'no budget found'})
+        if (!budget) return res.status(404).json({ error: 'no budget found' })
 
         return res.status(200).json({ budget })
     } catch (error) {
@@ -122,14 +148,14 @@ router.patch('/current/adjust', authMiddleware, (req, res) => {
 // supprimer un budget
 router.delete('/:id', authMiddleware, (req, res) => {
     const userId = req.userId
-    const {id} = req.params
+    const { id } = req.params
     try {
         const stmt = db.prepare('DELETE FROM budgets WHERE id = ? AND user_id = ?')
         const response = stmt.run(id, userId)
 
-        if (response.changes === 0) return res.status(404).json({error: 'no budget found'})
+        if (response.changes === 0) return res.status(404).json({ error: 'no budget found' })
 
-        res.status(200).json({message: 'budget deleted successfully'})
+        res.status(200).json({ message: 'budget deleted successfully' })
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
