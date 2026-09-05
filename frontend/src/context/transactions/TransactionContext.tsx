@@ -5,7 +5,8 @@ import {
     createTransaction as createTransactionService,
     getTransactions as getTransactionsService,
     updateTransaction as updateTransactionService,
-    deleteTransaction as deleteTransactionService
+    deleteTransaction as deleteTransactionService,
+    getTransactionsFilter as getTransactionsFilterService
 } from "../../services/transactions/transactionService";
 
 export const TransactionContext = createContext<TransactionContextType | undefined>(undefined)
@@ -25,6 +26,12 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
         setTransactions(response)
     }
 
+    // lister toutes les transactions
+    const refreshTransactionsFilter = async (query?: string) => {
+        const response = await getTransactionsFilterService(query)
+        setTransactions(response)
+    }
+
     // mettre à jour une transaction
     const updateTransaction = async (id: number, data: TransactionInput) => {
         await updateTransactionService(id, data)
@@ -38,7 +45,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     }
 
     return (
-        <TransactionContext.Provider value={{ transactions, createTransaction, refreshTransactions, updateTransaction, deleteTransaction }}>
+        <TransactionContext.Provider value={{ transactions, createTransaction, refreshTransactions, refreshTransactionsFilter, updateTransaction, deleteTransaction }}>
             {children}
         </TransactionContext.Provider>
     )

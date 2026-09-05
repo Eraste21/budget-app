@@ -34,7 +34,7 @@ export interface Delta {
 }
 
 // pour créer une transaction, on omet les id
-export type TransactionInput = Omit<Transaction, 'id' | 'user_id' | 'budget_id'>
+export type TransactionInput = Omit<Transaction, 'id' | 'user_id' | 'budget_id' | 'created_at'>
 
 export type BudgetInput = Omit<Budget, 'id' | 'user_id'>
 
@@ -74,6 +74,7 @@ export interface TransactionContextType {
     transactions: Transaction[] | null;
     createTransaction: (data: TransactionInput) => Promise<void>;
     refreshTransactions: () => Promise<void>;
+    refreshTransactionsFilter: () => Promise<void>;
     updateTransaction: (id: number, data: TransactionInput) => Promise<void>;
     deleteTransaction: (id: number) => Promise<void>;
 }
