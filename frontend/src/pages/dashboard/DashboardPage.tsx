@@ -9,7 +9,7 @@ export const DashboardPage = () => {
   const {currentBudget, totalSpent} = useBudget()
 
   useEffect(() => {
-    refreshTransactionsFilter('limit=5')
+    refreshTransactionsFilter('limit=3')
   }, [])
 
   return (

@@ -2,9 +2,25 @@ import { useTransaction } from "../../hooks/transactions/useTransaction"
 import { ReceiptText, TrendingDown, TrendingUp, TrendingUpDown } from "lucide-react"
 import { format } from "../../utils/format"
 import { DeleteButton } from "../ui/DeleteButton"
+import { Modal } from "../ui/Modal"
+import { DeleteTransactionForm } from "./DeleteTransactionForm"
+import { useState } from "react"
 
 export const TransactionsList = () => {
-  const { transactions, deleteTransaction } = useTransaction()
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedId, setSelectedId] = useState<number | null >(null)
+
+  const { transactions } = useTransaction()
+
+  const openDeleteModal = (id: number) => {
+    setSelectedId(id)
+    setIsOpen(true)
+  }
+
+  const closeDeleteModal = () => {
+    setIsOpen(false)
+    setSelectedId(null)
+  }
 
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200">
@@ -29,9 +45,9 @@ export const TransactionsList = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 bg-white text-slate-600">
-            {transactions ?
+            {transactions && transactions.length > 0 ?
               transactions?.map((transaction) => (
-                <tr className="transition hover:bg-indigo-50/40">
+                <tr key={transaction.id} className="transition hover:bg-indigo-50/40">
                   <td className={`w-14 px-4 py-4 ${transaction.type === 'Entrée' ? 'text-emerald-600' : 'text-red-600'}`}>
                     <span className={`mx-auto flex size-9 items-center justify-center rounded-lg ${transaction.type === 'Entrée' ? 'bg-emerald-50' : 'bg-red-50'}`}>
                       {transaction.type === 'Entrée' ? (
@@ -51,7 +67,7 @@ export const TransactionsList = () => {
                   <td className="px-4 py-4">{transaction.frequency}</td>
                   <td className="whitespace-nowrap px-4 py-4">{format(transaction.date)}</td>
                   <td className="px-4 py-4 text-center">
-                    <DeleteButton id={transaction.id} onDelete={deleteTransaction} />
+                    <DeleteButton id={transaction.id} onClick={openDeleteModal} />
                   </td>
                 </tr>
               ))
@@ -76,6 +92,11 @@ export const TransactionsList = () => {
           </tbody>
         </table>
       </div>
+      <Modal isOpen={isOpen} title="Supprimer" onClose={closeDeleteModal}>
+        {selectedId !== null && (
+          <DeleteTransactionForm id={selectedId} onClose={closeDeleteModal} />
+        )}
+      </Modal>
     </div>
   )
 }
