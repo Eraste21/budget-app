@@ -76,6 +76,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
     const deleteCurrentBudget = async (id: number) => {
         await deleteCurrentBudgetService(id)
         await refreshBudgets()
+        await refreshCurrentBudget()
     }
 
     return (

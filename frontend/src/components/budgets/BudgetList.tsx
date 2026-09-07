@@ -1,9 +1,10 @@
-import { PiggyBank, Trash2, WalletCards } from "lucide-react"
+import { PiggyBank, WalletCards } from "lucide-react"
 import { useBudget } from "../../hooks/budgets/useBudget"
 import { format } from "../../utils/format"
+import { DeleteButton } from "../ui/DeleteButton"
 
 export const BudgetList = () => {
-  const { budgets, currentBudget } = useBudget()
+  const { budgets, currentBudget, deleteCurrentBudget } = useBudget()
 
   return (
     <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
@@ -54,15 +55,12 @@ export const BudgetList = () => {
                           </span>
                       }
                     </td>
-                    <td className="px-5 py-4 text-center">
-                      <button
-                        aria-label="Supprimer le budget"
-                        className="inline-flex size-9 cursor-pointer items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 transition hover:border-red-300 hover:bg-red-100"
-                        type="button"
-                      >
-                        <Trash2 aria-hidden="true" className="size-4" />
-                      </button>
-                    </td>
+                    {
+                      isCurrent ?
+                        <td className="px-5 py-4 text-center">
+                          <DeleteButton id={budget.id} onDelete={deleteCurrentBudget} />
+                        </td> : <></>
+                    }
                   </tr>
                 )
               }) : (

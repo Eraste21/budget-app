@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { CircleDollarSign, PiggyBank, ReceiptText, Trash2, TrendingDown, TrendingUp, TrendingUpDown } from "lucide-react"
+import { CircleDollarSign, PiggyBank, ReceiptText, TrendingDown, TrendingUp, TrendingUpDown } from "lucide-react"
 import { format } from "../../utils/format"
 import { useBudget } from "../../hooks/budgets/useBudget"
 import { useTransaction } from "../../hooks/transactions/useTransaction"
@@ -81,7 +81,6 @@ export const DashboardPage = () => {
                 <th className="px-6 py-4 font-semibold" scope="col">Type</th>
                 <th className="px-6 py-4 font-semibold" scope="col">Fréquence</th>
                 <th className="px-6 py-4 font-semibold" scope="col">Date</th>
-                <th className="w-20 px-6 py-4 text-center font-semibold" scope="col">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-600">
@@ -109,15 +108,6 @@ export const DashboardPage = () => {
                       </td>
                       <td className="px-6 py-4">{transaction.frequency}</td>
                       <td className="whitespace-nowrap px-6 py-4">{format(transaction.date)}</td>
-                      <td className="px-6 py-4 text-center">
-                        <button
-                          aria-label="Supprimer la transaction"
-                          className="inline-flex size-9 cursor-pointer items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 transition hover:border-red-300 hover:bg-red-100"
-                          type="button"
-                        >
-                          <Trash2 aria-hidden="true" className="size-4" />
-                        </button>
-                      </td>
                     </tr>
                   ) : (
                     <tr>

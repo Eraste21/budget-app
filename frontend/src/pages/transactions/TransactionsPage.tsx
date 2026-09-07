@@ -91,9 +91,9 @@ export const TransactionsPage = () => {
         </section>
       </section>
 
-      <section>
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
         <button
-          className="mb-6 flex items-center gap-2 rounded-xl border-2 border-dashed border-indigo-300 bg-indigo-50 px-4 py-3 text-sm font-semibold text-indigo-700 transition hover:border-indigo-400 hover:bg-indigo-100 focus:outline-none focus:ring-4 focus:ring-indigo-500/15  cursor-pointer"
+          className="mb-6 flex cursor-pointer items-center gap-2 rounded-xl border-2 border-dashed border-indigo-300 bg-indigo-50 px-4 py-3 text-sm font-semibold text-indigo-700 transition hover:border-indigo-400 hover:bg-indigo-100 focus:outline-none focus:ring-4 focus:ring-indigo-500/15"
           onClick={() => setIsOpen(!isOpen)}
         >
           <Plus aria-hidden="true" className="size-5" />
