@@ -1,5 +1,5 @@
 import { useTransaction } from "../../hooks/transactions/useTransaction"
-import { ReceiptText } from "lucide-react"
+import { ReceiptText, TrendingDown, TrendingUp, TrendingUpDown } from "lucide-react"
 
 export const TransactionsList = () => {
   const { transactions } = useTransaction()
@@ -17,7 +17,7 @@ export const TransactionsList = () => {
         <table className="w-full min-w-160 border-collapse text-left text-sm">
           <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
             <tr>
-              <th className="w-16 px-5 py-4 font-semibold" scope="col">#</th>
+              <th className="w-16 px-5 py-4 font-semibold" scope="col"><TrendingUpDown /></th>
               <th className="px-5 py-4 font-semibold" scope="col">Catégorie</th>
               <th className="px-5 py-4 font-semibold" scope="col">Montant</th>
               <th className="px-5 py-4 font-semibold" scope="col">Type</th>
@@ -29,7 +29,15 @@ export const TransactionsList = () => {
             {transactions ?
               transactions?.map((transaction) => (
                 <tr className="transition hover:bg-indigo-50/40">
-                  <td className="px-5 py-4 font-medium text-slate-400">{transaction.id}</td>
+                  <td className={`w-16 px-5 py-4 ${transaction.type === 'Entrée' ? 'text-emerald-600' : 'text-red-600'}`}>
+                    <span className={`mx-auto flex size-9 items-center justify-center rounded-lg ${transaction.type === 'Entrée' ? 'bg-emerald-50' : 'bg-red-50'}`}>
+                      {transaction.type === 'Entrée' ? (
+                        <TrendingUp aria-hidden="true" className="size-5" />
+                      ) : (
+                        <TrendingDown aria-hidden="true" className="size-5" />
+                      )}
+                    </span>
+                  </td>
                   <td className="px-5 py-4 font-semibold text-slate-700">{transaction.category}</td>
                   <td className={`px-5 py-4 font-semibold ${transaction.type === 'Entrée' ? 'text-emerald-600' : 'text-red-600'}`}>{transaction.type === 'Entrée' ? '+' : '-'}{transaction.amount} €</td>
                   <td className="px-5 py-4">

@@ -21,8 +21,8 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         const initBudget = async () => {
-            await getBudgets()
-            await getCurrentBudget()
+            await refreshBudgets()
+            await refreshCurrentBudget()
             await getTotalSpent()
         }
 
@@ -32,16 +32,17 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
     // créer un budget
     const createBudget = async (data: BudgetInput) => {
         await createBudgetService(data)
+        await refreshBudgets()
     }
 
     // récupérer tous les budgets
-    const getBudgets = async () => {
+    const refreshBudgets = async () => {
         const response = await getBudgetsService()
         setBudgets(response)
     }
 
     // récupérer le budget courant
-    const getCurrentBudget = async () => {
+    const refreshCurrentBudget = async () => {
         const response = await getCurrentBudgetService()
         setCurrentBudget(response)
     }
@@ -55,21 +56,25 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
     // modifier le budget courant
     const updateCurrentBudget = async (data: BudgetInput) => {
         await updateCurrentBudgetService(data)
+        await refreshBudgets()
     }
 
     // augmenter le budget courant
     const increaseCurrentBudget = async (delta: Delta) => {
         await increaseCurrentBudgetService(delta)
+        await refreshBudgets()
     }
 
     // diminuer le budget courant
     const decreaseCurrentBudget = async (delta: Delta) => {
         await decreaseCurrentBudgetService(delta)
+        await refreshBudgets()
     }
 
     // supprimer le budget courant
     const deleteCurrentBudget = async (id: number) => {
         await deleteCurrentBudgetService(id)
+        await refreshBudgets()
     }
 
     return (

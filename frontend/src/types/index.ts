@@ -36,7 +36,7 @@ export interface Delta {
 // pour créer une transaction, on omet les id
 export type TransactionInput = Omit<Transaction, 'id' | 'user_id' | 'budget_id' | 'created_at'>
 
-export type BudgetInput = Omit<Budget, 'id' | 'user_id'>
+export type BudgetInput = Omit<Budget, 'id' | 'user_id' | 'created_at'>
 
 // pour récupérer le token
 export interface LoginResponse {
