@@ -59,7 +59,7 @@ export const updateCurrentBudget = async (data: BudgetInput): Promise<void> => {
     await checkResponse(response, 'Erreur lors de la modification du budget')
 }
 
-// augmenter le budget courant
+// ajuster le budget courant
 const adjustCurrentBudget = async (delta: Delta): Promise<void> => {
     const response = await fetch(`${API_URL}/budgets/current/adjust`, {
         method: 'PATCH',

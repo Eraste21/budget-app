@@ -5,8 +5,8 @@ export const TransactionForm = () => {
   const [date, setDate] = useState('')
   const [category, setCategory] = useState('')
   const [amount, setAmount] = useState(0)
-  const [type, setType] = useState<'entrée' | 'sortie' | ''>('')
-  const [frequency, setFrequency] = useState<'mensuelle' | 'ponctuelle' | ''>('')
+  const [type, setType] = useState<'Entrée' | 'Sortie' | ''>('')
+  const [frequency, setFrequency] = useState<'Mensuelle' | 'Ponctuelle' | ''>('')
   const [description, setDescription] = useState('')
   const [error, setError] = useState('')
 
@@ -97,11 +97,11 @@ export const TransactionForm = () => {
               id="type"
               name="type"
               value={type}
-              onChange={(e) => setType(e.target.value as 'entrée' | 'sortie' | '')}
+              onChange={(e) => setType(e.target.value as 'Entrée' | 'Sortie' | '')}
             >
               <option value="">Sélectionner</option>
-              <option value="entrée">Entrée</option>
-              <option value="sortie">Sortie</option>
+              <option value="Entrée">Entrée</option>
+              <option value="Sortie">Sortie</option>
             </select>
           </div>
 
@@ -114,11 +114,11 @@ export const TransactionForm = () => {
               id="frequency"
               name="frequency"
               value={frequency}
-              onChange={(e) => setFrequency(e.target.value as 'mensuelle' | 'ponctuelle' | '')}
+              onChange={(e) => setFrequency(e.target.value as 'Mensuelle' | 'Ponctuelle' | '')}
             >
               <option value="">Sélectionner</option>
-              <option value="mensuelle">Mensuelle</option>
-              <option value="ponctuelle">Ponctuelle</option>
+              <option value="Mensuelle">Mensuelle</option>
+              <option value="Ponctuelle">Ponctuelle</option>
             </select>
           </div>
         </div>

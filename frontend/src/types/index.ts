@@ -12,8 +12,8 @@ export interface Transaction {
     date: string;
     category: string;
     amount: number;
-    type: 'entrée' | 'sortie';
-    frequency: 'ponctuelle' | 'mensuelle';
+    type: 'Entrée' | 'Sortie';
+    frequency: 'Ponctuelle' | 'Mensuelle';
     description: string;
     created_at: string;
     user_id: number;
@@ -72,6 +72,8 @@ export interface BudgetContextType { }
 // contexte des transactions
 export interface TransactionContextType {
     transactions: Transaction[] | null;
+    incomes: string;
+    expenses: string;
     createTransaction: (data: TransactionInput) => Promise<void>;
     refreshTransactions: () => Promise<void>;
     refreshTransactionsFilter: () => Promise<void>;

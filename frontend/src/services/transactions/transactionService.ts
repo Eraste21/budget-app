@@ -24,6 +24,30 @@ export const getTransactions = async (): Promise<Transaction[]> => {
     return data.transactions
 }
 
+// obtenir le total ( soit des entrées, soit des sorties )
+const getTotal = async (query?: string): Promise<string> => {
+    const response = await fetch(`${API_URL}/transactions/total?type=${query}`, {
+        headers: authHeaders(),
+    })
+
+    await checkResponse(response, 'Erreur lors de la récupération des transactions')
+
+    const data = await response.json()
+    return data.total
+}
+
+// obtenir le total des entrées
+export const getTotalIncomes = async (): Promise<string> => {
+    const response = await getTotal('Entrée')
+    return response
+}
+
+// obtenir le total des sorties
+export const getTotalExpenses = async (): Promise<string> => {
+    const response = await getTotal('Sortie')
+    return response
+}
+
 // lister toutes les transacations ( via le filtre )
 export const getTransactionsFilter = async (query?: string): Promise<Transaction[]> => {
     const response = await fetch(`${API_URL}/transactions/?${query}`, {

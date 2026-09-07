@@ -62,10 +62,32 @@ router.get('/', authMiddleware, (req, res) => {
             params.push(category)
         }
 
+        query += ' ORDER BY created_at DESC'
+
         const stmt = db.prepare(query)
         const transactions = stmt.all(...params)
 
         return res.status(200).json({ transactions })
+    } catch (error) {
+        return res.status(400).json({ error: error.message })
+    }
+})
+
+// calculer le total des entrées / sorties
+router.get('/total', authMiddleware, (req, res) => {
+    const { type } = req.query
+
+    if (!type) return res.status(400).json({ error: 'type query parameter is required' })
+
+    const userId = req.userId
+    try {
+        const query = `SELECT SUM(amount) AS total FROM transactions where user_id = ? AND type = ?`
+        const stmt = db.prepare(query)
+        const total = stmt.get(userId, type)
+
+        if (total.total === null) return res.status(404).json({ error: 'no transaction found' })
+
+        return res.status(200).json(total)
     } catch (error) {
         return res.status(400).json({ error: error.message })
     }

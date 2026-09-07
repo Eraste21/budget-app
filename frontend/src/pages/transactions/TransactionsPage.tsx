@@ -3,9 +3,11 @@ import { TransactionForm } from "../../components/transactions/TransactionForm"
 import { TransactionsList } from "../../components/transactions/TransactionsList"
 import { Plus, RotateCcw, SlidersHorizontal } from "lucide-react"
 import { Modal } from "../../components/ui/Modal"
+import { useTransaction } from "../../hooks/transactions/useTransaction"
 
 export const TransactionsPage = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const {incomes, expenses} = useTransaction()
   return (
     <main className="min-h-full bg-slate-50 px-5 py-8 sm:px-8 lg:px-10">
       <section className="mb-8">
@@ -18,11 +20,11 @@ export const TransactionsPage = () => {
       <section className="mb-8 grid gap-4 sm:grid-cols-2">
         <div className="card rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
           <h1 className="text-sm font-semibold text-slate-500">Entrées :</h1>
-          <span className="mt-3 text-2xl font-bold text-emerald-600">X €</span>
+          <span className="mt-3 text-2xl font-bold text-emerald-600">{incomes} €</span>
         </div>
         <div className="card rounded-2xl border border-red-100 bg-white p-5 shadow-sm">
           <h1 className="text-sm font-semibold text-slate-500">Sorties :</h1>
-          <span className="mt-3 text-2xl font-bold text-red-600">-X €</span>
+          <span className="mt-3 text-2xl font-bold text-red-600">-{expenses} €</span>
         </div>
       </section>
 

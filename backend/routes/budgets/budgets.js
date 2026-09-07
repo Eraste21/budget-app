@@ -62,7 +62,7 @@ router.get('/current/spent', authMiddleware, (req, res) => {
         stmt = db.prepare(`
             SELECT SUM(amount) AS total 
             FROM transactions 
-            WHERE user_id = ? AND budget_id = ? AND type = 'sortie'
+            WHERE user_id = ? AND budget_id = ? AND type = 'Sortie'
         `)
 
         const result = stmt.get(userId, budgetId, type)
