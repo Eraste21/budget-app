@@ -87,7 +87,7 @@ router.get('/total', authMiddleware, (req, res) => {
     const userId = req.userId
     try {
         const params = [userId, type]
-        const query = 'SELECT SUM(amount) AS total FROM transactions where user_id = ? AND type = ?'
+        let query = 'SELECT SUM(amount) AS total FROM transactions where user_id = ? AND type = ?'
 
         if (budgetId) {
             query += ' AND budget_id = ?'
