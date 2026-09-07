@@ -75,19 +75,24 @@ router.get('/', authMiddleware, (req, res) => {
 
 // calculer le total des entrées / sorties
 router.get('/total', authMiddleware, (req, res) => {
-    const { type } = req.query
+    const { type, budgetId } = req.query
 
     if (!type) return res.status(400).json({ error: 'type query parameter is required' })
 
     const userId = req.userId
     try {
-        const query = `SELECT SUM(amount) AS total FROM transactions where user_id = ? AND type = ?`
+        const params = [userId, type]
+        const query = 'SELECT SUM(amount) AS total FROM transactions where user_id = ? AND type = ?'
+
+        if (budgetId) {
+            query += ' AND budget_id = ?'
+            params.push(budgetId)
+        }
+
         const stmt = db.prepare(query)
-        const total = stmt.get(userId, type)
+        const result = stmt.get(...params)
 
-        if (total.total === null) return res.status(404).json({ error: 'no transaction found' })
-
-        return res.status(200).json(total)
+        return res.status(200).json({total: result.total || 0})
     } catch (error) {
         return res.status(400).json({ error: error.message })
     }
