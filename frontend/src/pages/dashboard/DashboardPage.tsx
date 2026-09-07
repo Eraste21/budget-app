@@ -85,7 +85,7 @@ export const DashboardPage = () => {
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-600">
               {
-                transactions ?
+                transactions && transactions.length > 0 ?
                   transactions.map((transaction) =>
                     <tr className="transition hover:bg-indigo-50/40">
                       <td className={`w-16 px-6 py-4 ${transaction.type === 'Entrée' ? 'text-emerald-600' : 'text-red-600'}`}>

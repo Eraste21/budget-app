@@ -5,7 +5,7 @@ type DeleteButtonProps = {
     onClick: (id: number) => void;
 }
 
-export const DeleteButton = ({id, onClick}: DeleteButtonProps) => {
+export const DeleteButton = ({ id, onClick }: DeleteButtonProps) => {
     return (
         <button
             aria-label="Supprimer la transaction"

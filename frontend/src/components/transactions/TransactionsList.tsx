@@ -8,7 +8,7 @@ import { useState } from "react"
 
 export const TransactionsList = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedId, setSelectedId] = useState<number | null >(null)
+  const [selectedId, setSelectedId] = useState<number | null>(null)
 
   const { transactions } = useTransaction()
 

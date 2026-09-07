@@ -2,9 +2,24 @@ import { PiggyBank, WalletCards } from "lucide-react"
 import { useBudget } from "../../hooks/budgets/useBudget"
 import { format } from "../../utils/format"
 import { DeleteButton } from "../ui/DeleteButton"
+import { useState } from "react"
+import { Modal } from "../ui/Modal"
+import { DeleteBudgetForm } from "./DeleteBudgetForm"
 
 export const BudgetList = () => {
-  const { budgets, currentBudget, deleteCurrentBudget } = useBudget()
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedId, setSelectedId] = useState<number | null>(null)
+  const { budgets, currentBudget } = useBudget()
+
+  const openDeleteModal = (id: number) => {
+    setSelectedId(id)
+    setIsOpen(true)
+  }
+
+  const closeDeleteModal = () => {
+    setIsOpen(false)
+    setSelectedId(null)
+  }
 
   return (
     <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
@@ -33,10 +48,10 @@ export const BudgetList = () => {
           </thead>
           <tbody className="divide-y divide-slate-100 text-slate-600">
             {
-              budgets ? budgets.map((budget) => {
+              budgets && budgets.length > 0 ? budgets.map((budget) => {
                 const isCurrent = budget?.id === currentBudget?.id
                 return (
-                  <tr className="transition hover:bg-indigo-50/40">
+                  <tr key={budget.id} className="transition hover:bg-indigo-50/40">
                     <td className="px-5 py-4">
                       <span className={`flex size-9 items-center justify-center rounded-lg ring-1 ${isCurrent ? 'bg-linear-to-b from-blue-50 to-violet-100 text-indigo-600 ring-indigo-100' : 'bg-slate-50 text-slate-400 ring-slate-200'}`}>
                         <PiggyBank aria-hidden="true" className="size-5" />
@@ -58,19 +73,36 @@ export const BudgetList = () => {
                     {
                       isCurrent ?
                         <td className="px-5 py-4 text-center">
-                          <DeleteButton id={budget.id} onDelete={deleteCurrentBudget} />
+                          <DeleteButton id={budget.id} onClick={openDeleteModal} />
                         </td> : <></>
                     }
                   </tr>
                 )
               }) : (
-                <p className="font-semibold text-slate-800">
-                  Aucun budget renseigné pour le moment
-                </p>
+                <tr>
+                  <td className="px-6 py-14 text-center" colSpan={5}>
+                    <div className="mx-auto flex max-w-sm flex-col items-center">
+                      <span className="mb-4 flex size-14 items-center justify-center rounded-2xl border border-dashed border-indigo-300 bg-indigo-50 text-indigo-600">
+                        <PiggyBank aria-hidden="true" className="size-7" />
+                      </span>
+                      <p className="font-semibold text-slate-800">
+                        Aucun budget renseigné pour le moment
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-slate-500">
+                        Ajoutez votre premier budget pour commencer à suivre et organiser vos dépenses.
+                      </p>
+                    </div>
+                  </td>
+                </tr>
               )}
           </tbody>
         </table>
       </div>
+      <Modal isOpen={isOpen} title="Supprimer" onClose={() => setIsOpen(false)}>
+        {selectedId !== null &&(
+          <DeleteBudgetForm id={selectedId} onClose={closeDeleteModal} />
+        )}
+      </Modal>
     </section>
   )
 }
