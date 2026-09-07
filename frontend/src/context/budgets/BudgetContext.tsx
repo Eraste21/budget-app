@@ -1,14 +1,79 @@
-import { createContext, type ReactNode } from "react";
-import type { /*Budget,*/ BudgetContextType } from "../../types";
-// import API_URL from "../../services/api"
+import { createContext, useEffect, useState, type ReactNode } from "react";
+import type { Budget, BudgetContextType, BudgetInput, Delta } from "../../types";
+import { 
+    createBudget as createBudgetService, 
+    getBudgets as getBudgetsService,
+    getCurrentBudget as getCurrentBudgetService,
+    getTotalSpent as getTotalSpentService,
+    updateCurrentBudget as updateCurrentBudgetService,
+    increaseCurrentBudget as increaseCurrentBudgetService,
+    decreaseCurrentBudget as decreaseCurrentBudgetService,
+    deleteCurrentBudget as deleteCurrentBudgetService
+} from "../../services/budgets/budgetService";
 
 const BudgetContext = createContext<BudgetContextType | null>(null)
 export default BudgetContext;
 
 export const BudgetProvider = ({ children }: { children: ReactNode }) => {
-    // const createBudget = 0
+    const [budgets, setBudgets] = useState<Budget[] | null>(null)
+    const [currentBudget, setCurrentBudget] = useState<Budget | null>(null)
+    const [totalSpent, setTotalSpent] = useState(0)
+
+    useEffect(() => {
+        const initBudget = async () => {
+            await getBudgets()
+            await getCurrentBudget()
+            await getTotalSpent()
+        }
+
+        initBudget()
+    }, [])
+
+    // créer un budget
+    const createBudget = async (data: BudgetInput) => {
+        await createBudgetService(data)
+    }
+
+    // récupérer tous les budgets
+    const getBudgets = async () => {
+        const response = await getBudgetsService()
+        setBudgets(response)
+    }
+
+    // récupérer le budget courant
+    const getCurrentBudget = async () => {
+        const response = await getCurrentBudgetService()
+        setCurrentBudget(response)
+    }
+
+    // récupérer le total des dépenses du budget courant
+    const getTotalSpent = async () => {
+        const response = await getTotalSpentService()
+        setTotalSpent(response)
+    }
+
+    // modifier le budget courant
+    const updateCurrentBudget = async (data: BudgetInput) => {
+        await updateCurrentBudgetService(data)
+    }
+
+    // augmenter le budget courant
+    const increaseCurrentBudget = async (delta: Delta) => {
+        await increaseCurrentBudgetService(delta)
+    }
+
+    // diminuer le budget courant
+    const decreaseCurrentBudget = async (delta: Delta) => {
+        await decreaseCurrentBudgetService(delta)
+    }
+
+    // supprimer le budget courant
+    const deleteCurrentBudget = async (id: number) => {
+        await deleteCurrentBudgetService(id)
+    }
+
     return (
-        <BudgetContext.Provider value={{}} >
+        <BudgetContext.Provider value={{budgets, currentBudget, totalSpent, createBudget, updateCurrentBudget, increaseCurrentBudget, decreaseCurrentBudget, deleteCurrentBudget }} >
             {children}
         </BudgetContext.Provider>
     )

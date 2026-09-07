@@ -6,7 +6,7 @@ import { DashboardLayout } from "./layout/DashboardLayout"
 import { DashboardPage } from "./pages/dashboard/DashboardPage"
 import { TransactionsPage } from "./pages/transactions/TransactionsPage"
 import { StatisticsPage } from "./pages/statistics/StatisticsPage"
-import { BudgetsPage } from "./pages/budget/BudgetsPage"
+import { BudgetsPage } from "./pages/budgets/BudgetsPage"
 
 const App = () => {
 

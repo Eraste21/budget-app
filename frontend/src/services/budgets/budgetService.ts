@@ -37,13 +37,13 @@ export const getCurrentBudget = async (): Promise<Budget> => {
 }
 
 // récupérer le total des dépenses sur le budget courrant
-export const getSpent = async (): Promise<number> => {
+export const getTotalSpent = async (): Promise<number> => {
     const response = await fetch(`${API_URL}/budgets/current/spent`, {
         headers: authHeaders(),
     })
 
     await checkResponse(response, 'Erreur lors de la récupération du budget')
-    
+
     const data = await response.json()
     return data.spent
 }

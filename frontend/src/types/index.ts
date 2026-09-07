@@ -67,7 +67,16 @@ export interface AuthContextType {
 }
 
 // contexte des budgets
-export interface BudgetContextType { }
+export interface BudgetContextType { 
+    budgets: Budget[] | null;
+    currentBudget: Budget | null;
+    totalSpent: number;
+    createBudget: (data: BudgetInput) => Promise<void>;
+    updateCurrentBudget: (data: BudgetInput) => Promise<void>;
+    increaseCurrentBudget: (delta: Delta) => Promise<void>;
+    decreaseCurrentBudget: (delta: Delta) => Promise<void>;
+    deleteCurrentBudget: (id: number) => Promise<void>;
+}
 
 // contexte des transactions
 export interface TransactionContextType {
