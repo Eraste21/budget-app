@@ -1,4 +1,4 @@
-import { PiggyBank, WalletCards } from "lucide-react"
+import { PiggyBank, Trash2, WalletCards } from "lucide-react"
 import { useBudget } from "../../hooks/budgets/useBudget"
 import { format } from "../../utils/format"
 
@@ -27,6 +27,7 @@ export const BudgetList = () => {
               <th className="px-5 py-4 font-semibold" scope="col">Montant</th>
               <th className="px-5 py-4 font-semibold" scope="col">Date de création</th>
               <th className="px-5 py-4 font-semibold" scope="col">Statut</th>
+              <th className="w-20 px-5 py-4 text-center font-semibold" scope="col">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-slate-600">
@@ -52,6 +53,15 @@ export const BudgetList = () => {
                             Archivé
                           </span>
                       }
+                    </td>
+                    <td className="px-5 py-4 text-center">
+                      <button
+                        aria-label="Supprimer le budget"
+                        className="inline-flex size-9 cursor-pointer items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 transition hover:border-red-300 hover:bg-red-100"
+                        type="button"
+                      >
+                        <Trash2 aria-hidden="true" className="size-4" />
+                      </button>
                     </td>
                   </tr>
                 )

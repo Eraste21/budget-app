@@ -30,20 +30,24 @@ export const TransactionsPage = () => {
         </p>
       </section>
 
-      <section className="mb-6 grid gap-6 xl:grid-cols-5">
-        <div className="xl:col-span-2">
+      <section className="mb-6 grid gap-6 xl:grid-cols-[45fr_55fr]">
+        <div>
           <section className="mb-4 grid gap-4 sm:grid-cols-2">
-            <div className="card rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
-              <h1 className="text-sm font-semibold text-slate-500">Entrées :</h1>
-              <span className="mt-3 flex w-full items-center justify-between text-2xl font-bold text-emerald-600">
-                {incomes} €
+            <div className="relative rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
+              <div className="pr-16">
+                <h1 className="text-sm font-semibold text-slate-500">Entrées :</h1>
+                <span className="mt-3 block text-2xl font-bold text-emerald-600">{incomes} €</span>
+              </div>
+              <span className="absolute right-5 top-1/2 flex size-12 -translate-y-1/2 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                 <TrendingUp aria-hidden="true" className="size-6" />
               </span>
             </div>
-            <div className="card rounded-2xl border border-red-100 bg-white p-5 shadow-sm">
-              <h1 className="text-sm font-semibold text-slate-500">Sorties :</h1>
-              <span className="mt-3 flex w-full items-center justify-between text-2xl font-bold text-red-600">
-                -{expenses} €
+            <div className="relative rounded-2xl border border-red-100 bg-white p-5 shadow-sm">
+              <div className="pr-16">
+                <h1 className="text-sm font-semibold text-slate-500">Sorties :</h1>
+                <span className="mt-3 block text-2xl font-bold text-red-600">-{expenses} €</span>
+              </div>
+              <span className="absolute right-5 top-1/2 flex size-12 -translate-y-1/2 items-center justify-center rounded-xl bg-red-50 text-red-600">
                 <TrendingDown aria-hidden="true" className="size-6" />
               </span>
             </div>
@@ -77,7 +81,7 @@ export const TransactionsPage = () => {
           </section>
         </div>
 
-        <section className="flex min-h-56 flex-col items-center justify-center rounded-2xl border border-dashed border-indigo-200 bg-linear-to-br from-white to-indigo-50 p-6 text-center shadow-sm xl:col-span-3">
+        <section className="flex min-h-56 flex-col items-center justify-center rounded-2xl border border-dashed border-indigo-200 bg-linear-to-br from-white to-indigo-50 p-6 text-center shadow-sm">
           <span className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600">
             <ChartNoAxesCombined aria-hidden="true" className="size-7" />
           </span>
@@ -87,7 +91,7 @@ export const TransactionsPage = () => {
         </section>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+      <section>
         <button
           className="mb-6 flex items-center gap-2 rounded-xl border-2 border-dashed border-indigo-300 bg-indigo-50 px-4 py-3 text-sm font-semibold text-indigo-700 transition hover:border-indigo-400 hover:bg-indigo-100 focus:outline-none focus:ring-4 focus:ring-indigo-500/15  cursor-pointer"
           onClick={() => setIsOpen(!isOpen)}

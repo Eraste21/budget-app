@@ -39,7 +39,7 @@ router.post('/', authMiddleware, (req, res) => {
 // lister toutes les transactions ( avec un filtre )
 router.get('/', authMiddleware, (req, res) => {
     const userId = req.userId
-    const { budgetId, type, frequency, category } = req.query
+    const { budgetId, type, frequency, category, limit } = req.query
 
     try {
         let query = 'SELECT * FROM transactions WHERE user_id = ?'
@@ -63,6 +63,11 @@ router.get('/', authMiddleware, (req, res) => {
         }
 
         query += ' ORDER BY created_at DESC'
+
+        if (limit) {
+            query += ' LIMIT ?'
+            params.push(limit)
+        }
 
         const stmt = db.prepare(query)
         const transactions = stmt.all(...params)
