@@ -49,7 +49,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
         await getTotal()
     }
 
-    // lister toutes les transactions
+    // lister toutes les transactions ( par filtre )
     const refreshTransactionsFilter = async (query?: string) => {
         const response = await getTransactionsFilterService(query)
         setTransactions(response)

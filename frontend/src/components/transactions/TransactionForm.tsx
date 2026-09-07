@@ -1,7 +1,11 @@
 import { useState } from "react"
 import { useTransaction } from "../../hooks/transactions/useTransaction"
 
-export const TransactionForm = () => {
+type TransactionFormProps = {
+  onClose: () => void
+}
+
+export const TransactionForm = ({ onClose }: TransactionFormProps) => {
   const [date, setDate] = useState('')
   const [category, setCategory] = useState('')
   const [amount, setAmount] = useState(0)
@@ -17,11 +21,12 @@ export const TransactionForm = () => {
     setError('')
 
     if (!type || !frequency) {
-        setError('Merci de sélectionner un type et une fréquence')
-        return
+      setError('Merci de sélectionner un type et une fréquence')
+      return
     }
-    
+
     try {
+      onClose()
       await createTransaction({ date, category, amount, type, frequency, description })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors de l\'ajout de la transaction')

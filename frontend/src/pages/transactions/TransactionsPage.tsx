@@ -1,13 +1,26 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { TransactionForm } from "../../components/transactions/TransactionForm"
 import { TransactionsList } from "../../components/transactions/TransactionsList"
-import { Plus, RotateCcw, SlidersHorizontal } from "lucide-react"
+import { ChartNoAxesCombined, Plus, RotateCcw, SlidersHorizontal, TrendingDown, TrendingUp } from "lucide-react"
 import { Modal } from "../../components/ui/Modal"
 import { useTransaction } from "../../hooks/transactions/useTransaction"
 
 export const TransactionsPage = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const {incomes, expenses} = useTransaction()
+  const [filter, setFilter] = useState('')
+  const { incomes, expenses, refreshTransactions, refreshTransactionsFilter } = useTransaction()
+
+  useEffect(() => {
+    const applyFilter = async () => {
+      if (filter === '') {
+        await refreshTransactions()
+      } else {
+        await refreshTransactionsFilter(`type=${filter}`)
+      }
+    }
+
+    applyFilter()
+  }, [filter])
   return (
     <main className="min-h-full bg-slate-50 px-5 py-8 sm:px-8 lg:px-10">
       <section className="mb-8">
@@ -17,50 +30,61 @@ export const TransactionsPage = () => {
         </p>
       </section>
 
-      <section className="mb-8 grid gap-4 sm:grid-cols-2">
-        <div className="card rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
-          <h1 className="text-sm font-semibold text-slate-500">Entrées :</h1>
-          <span className="mt-3 text-2xl font-bold text-emerald-600">{incomes} €</span>
-        </div>
-        <div className="card rounded-2xl border border-red-100 bg-white p-5 shadow-sm">
-          <h1 className="text-sm font-semibold text-slate-500">Sorties :</h1>
-          <span className="mt-3 text-2xl font-bold text-red-600">-{expenses} €</span>
-        </div>
-      </section>
+      <section className="mb-6 grid gap-6 xl:grid-cols-5">
+        <div className="xl:col-span-2">
+          <section className="mb-4 grid gap-4 sm:grid-cols-2">
+            <div className="card rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
+              <h1 className="text-sm font-semibold text-slate-500">Entrées :</h1>
+              <span className="mt-3 flex w-full items-center justify-between text-2xl font-bold text-emerald-600">
+                {incomes} €
+                <TrendingUp aria-hidden="true" className="size-6" />
+              </span>
+            </div>
+            <div className="card rounded-2xl border border-red-100 bg-white p-5 shadow-sm">
+              <h1 className="text-sm font-semibold text-slate-500">Sorties :</h1>
+              <span className="mt-3 flex w-full items-center justify-between text-2xl font-bold text-red-600">
+                -{expenses} €
+                <TrendingDown aria-hidden="true" className="size-6" />
+              </span>
+            </div>
+          </section>
 
-      <section className="mb-6 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="mr-1 flex items-center gap-2 text-sm font-semibold text-slate-700">
-            <SlidersHorizontal aria-hidden="true" className="size-4 text-indigo-600" />
-            Filtrer :
+          <section className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-3">
+              <label className="flex items-center gap-2 text-sm font-semibold text-slate-700" htmlFor="transaction-type-filter">
+                <SlidersHorizontal aria-hidden="true" className="size-4 text-indigo-600" />
+              </label>
+              <select
+                className="min-w-24 cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 outline-none transition hover:bg-slate-50 focus:border-slate-400 focus:ring-4 focus:ring-slate-500/10"
+                id="transaction-type-filter"
+                name="type"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+              >
+                <option value="">Toutes</option>
+                <option value="Entrée">Entrées</option>
+                <option value="Sortie">Sorties</option>
+              </select>
+            </div>
+
+            <button
+              className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700"
+              type="button"
+              onClick={() => setFilter('')}
+            >
+              <RotateCcw aria-hidden="true" className="size-4" />
+            </button>
+          </section>
+        </div>
+
+        <section className="flex min-h-56 flex-col items-center justify-center rounded-2xl border border-dashed border-indigo-200 bg-linear-to-br from-white to-indigo-50 p-6 text-center shadow-sm xl:col-span-3">
+          <span className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600">
+            <ChartNoAxesCombined aria-hidden="true" className="size-7" />
           </span>
-          <button
-            className="cursor-pointer rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700 transition hover:bg-indigo-100"
-            type="button"
-          >
-            Toutes
-          </button>
-          <button
-            className="cursor-pointer rounded-lg border border-emerald-200 bg-white px-3 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-50"
-            type="button"
-          >
-            Entrées
-          </button>
-          <button
-            className="cursor-pointer rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-medium text-red-700 transition hover:bg-red-50"
-            type="button"
-          >
-            Sorties
-          </button>
-        </div>
-
-        <button
-          className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700"
-          type="button"
-        >
-          <RotateCcw aria-hidden="true" className="size-4" />
-          Réinitialiser
-        </button>
+          <p className="font-semibold text-indigo-950">
+            Fonctionnalité bientôt disponible
+          </p>
+        </section>
       </section>
 
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
@@ -74,7 +98,7 @@ export const TransactionsPage = () => {
         <TransactionsList />
       </section>
       <Modal isOpen={isOpen} title="Ajouter une transaction" onClose={() => setIsOpen(false)}>
-        <TransactionForm />
+        <TransactionForm onClose={() => setIsOpen(false)} />
       </Modal>
     </main>
   )

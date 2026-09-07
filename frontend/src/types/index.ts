@@ -76,7 +76,7 @@ export interface TransactionContextType {
     expenses: string;
     createTransaction: (data: TransactionInput) => Promise<void>;
     refreshTransactions: () => Promise<void>;
-    refreshTransactionsFilter: () => Promise<void>;
+    refreshTransactionsFilter: (query?: string) => Promise<void>;
     updateTransaction: (id: number, data: TransactionInput) => Promise<void>;
     deleteTransaction: (id: number) => Promise<void>;
 }

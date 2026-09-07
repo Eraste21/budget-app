@@ -26,14 +26,14 @@ export const TransactionsList = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 bg-white text-slate-600">
-            {transactions ? 
+            {transactions ?
               transactions?.map((transaction) => (
                 <tr className="transition hover:bg-indigo-50/40">
                   <td className="px-5 py-4 font-medium text-slate-400">{transaction.id}</td>
                   <td className="px-5 py-4 font-semibold text-slate-700">{transaction.category}</td>
                   <td className={`px-5 py-4 font-semibold ${transaction.type === 'Entrée' ? 'text-emerald-600' : 'text-red-600'}`}>{transaction.type === 'Entrée' ? '+' : '-'}{transaction.amount} €</td>
                   <td className="px-5 py-4">
-                    <span className={`rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 ${transaction.type === 'Entrée' ? 'text-emerald-600' : 'text-red-600'}`}>
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${transaction.type === 'Entrée' ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : 'bg-red-50 text-red-700 ring-red-200'}`}>
                       {transaction.type}
                     </span>
                   </td>
@@ -57,7 +57,8 @@ export const TransactionsList = () => {
                     </div>
                   </td>
                 </tr>
-              )}
+              )
+            }
           </tbody>
         </table>
       </div>
