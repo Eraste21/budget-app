@@ -1,4 +1,6 @@
+import { PiggyBank, WalletCards } from "lucide-react"
 import { useBudget } from "../../hooks/budgets/useBudget"
+import { format } from "../../utils/format"
 
 export const BudgetList = () => {
   const { budgets, currentBudget } = useBudget()
@@ -11,7 +13,7 @@ export const BudgetList = () => {
           <p className="mt-1 text-sm text-slate-500">Consultez les budgets créés précédemment.</p>
         </div>
         <span className="shrink-0 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
-          5 budgets
+          {budgets?.length} budget(s)
         </span>
       </header>
 
@@ -19,7 +21,9 @@ export const BudgetList = () => {
         <table className="w-full min-w-130 border-collapse text-left text-sm">
           <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
             <tr>
-              <th className="w-16 px-5 py-4 font-semibold" scope="col">#</th>
+              <th className="w-16 px-5 py-4 font-semibold" scope="col">
+                <WalletCards aria-label="Budget" className="size-5" />
+              </th>
               <th className="px-5 py-4 font-semibold" scope="col">Montant</th>
               <th className="px-5 py-4 font-semibold" scope="col">Date de création</th>
               <th className="px-5 py-4 font-semibold" scope="col">Statut</th>
@@ -31,9 +35,13 @@ export const BudgetList = () => {
                 const isCurrent = budget?.id === currentBudget?.id
                 return (
                   <tr className="transition hover:bg-indigo-50/40">
-                    <td className="px-5 py-4 font-medium text-slate-400">{budget.id}</td>
+                    <td className="px-5 py-4">
+                      <span className={`flex size-9 items-center justify-center rounded-lg ring-1 ${isCurrent ? 'bg-linear-to-b from-blue-50 to-violet-100 text-indigo-600 ring-indigo-100' : 'bg-slate-50 text-slate-400 ring-slate-200'}`}>
+                        <PiggyBank aria-hidden="true" className="size-5" />
+                      </span>
+                    </td>
                     <td className="px-5 py-4 text-base font-semibold text-slate-700">{budget.amount} €</td>
-                    <td className="whitespace-nowrap px-5 py-4">{budget.created_at}</td>
+                    <td className="whitespace-nowrap px-5 py-4">{format(budget.created_at).split(' ', 1)}</td>
                     <td className="px-5 py-4">
                       {
                         isCurrent ?

@@ -24,7 +24,7 @@ router.post('/', authMiddleware, (req, res) => {
 router.get('/', authMiddleware, (req, res) => {
     const userId = req.userId
     try {
-        const stmt = db.prepare('SELECT * FROM budgets WHERE user_id = ?')
+        const stmt = db.prepare('SELECT * FROM budgets WHERE user_id = ? ORDER BY created_at DESC')
         const budgets = stmt.all(userId)
 
         res.status(200).json({ budgets })

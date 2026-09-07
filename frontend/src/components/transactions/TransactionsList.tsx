@@ -1,5 +1,6 @@
 import { useTransaction } from "../../hooks/transactions/useTransaction"
 import { ReceiptText, TrendingDown, TrendingUp, TrendingUpDown } from "lucide-react"
+import { format } from "../../utils/format"
 
 export const TransactionsList = () => {
   const { transactions } = useTransaction()
@@ -46,7 +47,7 @@ export const TransactionsList = () => {
                     </span>
                   </td>
                   <td className="px-5 py-4">{transaction.frequency}</td>
-                  <td className="whitespace-nowrap px-5 py-4">{transaction.date}</td>
+                  <td className="whitespace-nowrap px-5 py-4">{format(transaction.date)}</td>
                 </tr>
               ))
               : (

@@ -33,6 +33,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
     const createBudget = async (data: BudgetInput) => {
         await createBudgetService(data)
         await refreshBudgets()
+        await refreshCurrentBudget()
     }
 
     // récupérer tous les budgets
