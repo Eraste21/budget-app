@@ -3,10 +3,11 @@ import { CircleDollarSign, PiggyBank, ReceiptText, TrendingDown, TrendingUp, Tre
 import { format } from "../../utils/format"
 import { useBudget } from "../../hooks/budgets/useBudget"
 import { useTransaction } from "../../hooks/transactions/useTransaction"
+import { BalanceChart } from "../../components/dashboard/BalanceChart"
 
 export const DashboardPage = () => {
   const { transactions, refreshTransactionsFilter, incomes, expenses } = useTransaction()
-  const {currentBudget, totalSpent} = useBudget()
+  const { currentBudget, totalSpent } = useBudget()
 
   useEffect(() => {
     refreshTransactionsFilter('limit=3')
@@ -56,7 +57,7 @@ export const DashboardPage = () => {
         <div className="flex items-center justify-between rounded-2xl border border-indigo-100 bg-linear-to-br from-blue-600 to-violet-600 p-5 text-white shadow-md shadow-indigo-200">
           <div>
             <span className="block text-sm font-medium text-indigo-100">Budget</span>
-            <span className="mt-3 block text-2xl font-bold">{currentBudget?.amount} €</span>
+            <span className="mt-3 block text-2xl font-bold">{currentBudget ? currentBudget.amount : 0} €</span>
           </div>
           <span className="flex size-12 items-center justify-center rounded-xl bg-white/15 text-white">
             <PiggyBank aria-hidden="true" className="size-6" />
@@ -64,67 +65,81 @@ export const DashboardPage = () => {
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="border-b border-slate-200 px-6 py-5">
-          <h2 className="text-lg font-semibold text-slate-800">Dernières opérations</h2>
-        </div>
+      <section className="grid gap-6 xl:grid-cols-[45fr_55fr]">
+        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="border-b border-slate-200 px-6 py-5">
+            <h2 className="text-lg font-semibold text-slate-800">Dernières opérations</h2>
+          </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-160 table-fixed border-collapse text-left text-sm">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
-              <tr>
-                <th className="w-16 px-6 py-4 font-semibold" scope="col">
-                  <TrendingUpDown aria-label="Variation" className="size-5" />
-                </th>
-                <th className="px-6 py-4 font-semibold" scope="col">Catégorie</th>
-                <th className="px-6 py-4 font-semibold" scope="col">Montant</th>
-                <th className="px-6 py-4 font-semibold" scope="col">Type</th>
-                <th className="px-6 py-4 font-semibold" scope="col">Fréquence</th>
-                <th className="px-6 py-4 font-semibold" scope="col">Date</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-600">
-              {
-                transactions && transactions.length > 0 ?
-                  transactions.map((transaction) =>
-                    <tr className="transition hover:bg-indigo-50/40">
-                      <td className={`w-16 px-6 py-4 ${transaction.type === 'Entrée' ? 'text-emerald-600' : 'text-red-600'}`}>
-                        <span className={`mx-auto flex size-9 items-center justify-center rounded-lg ${transaction.type === 'Entrée' ? 'bg-emerald-50' : 'bg-red-50'}`}>
-                          {transaction.type === 'Entrée' ? (
-                            <TrendingUp aria-hidden="true" className="size-5" />
-                          ) : (
-                            <TrendingDown aria-hidden="true" className="size-5" />
-                          )}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 font-semibold text-slate-700">{transaction.category}</td>
-                      <td className={`px-6 py-4 font-semibold ${transaction.type === 'Entrée' ? 'text-emerald-600' : 'text-red-600'}`}>
-                        {transaction.type === 'Entrée' ? '+' : '-'}{transaction.amount} €
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${transaction.type === 'Entrée' ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : 'bg-red-50 text-red-700 ring-red-200'}`}>
-                          {transaction.type}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">{transaction.frequency}</td>
-                      <td className="whitespace-nowrap px-6 py-4">{format(transaction.date)}</td>
-                    </tr>
-                  ) : (
-                    <tr>
-                      <td className="px-6 py-12 text-center" colSpan={7}>
-                        <div className="mx-auto flex max-w-sm flex-col items-center">
-                          <span className="mb-3 flex size-12 items-center justify-center rounded-xl border border-dashed border-indigo-300 bg-indigo-50 text-indigo-600">
-                            <ReceiptText aria-hidden="true" className="size-6" />
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-105 table-fixed border-collapse text-left text-sm">
+              <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+                <tr>
+                  <th className="w-14 px-4 py-4 font-semibold" scope="col">
+                    <TrendingUpDown aria-label="Variation" className="size-5" />
+                  </th>
+                  <th className="px-4 py-4 font-semibold" scope="col">Catégorie</th>
+                  <th className="px-4 py-4 font-semibold" scope="col">Montant</th>
+                  <th className="px-4 py-4 font-semibold" scope="col">Date</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-slate-600">
+                {
+                  transactions && transactions.length > 0 ?
+                    transactions.map((transaction) =>
+                      <tr className="transition hover:bg-indigo-50/40">
+                        <td className={`w-14 px-4 py-4 ${transaction.type === 'Entrée' ? 'text-emerald-600' : 'text-red-600'}`}>
+                          <span className={`mx-auto flex size-9 items-center justify-center rounded-lg ${transaction.type === 'Entrée' ? 'bg-emerald-50' : 'bg-red-50'}`}>
+                            {transaction.type === 'Entrée' ? (
+                              <TrendingUp aria-hidden="true" className="size-5" />
+                            ) : (
+                              <TrendingDown aria-hidden="true" className="size-5" />
+                            )}
                           </span>
-                          <p className="font-semibold text-slate-800">Aucune transaction enregistrée à ce jour</p>
-                        </div>
-                      </td>
-                    </tr>
-                  )
-              }
-            </tbody>
-          </table>
-        </div>
+                        </td>
+                        <td className="px-4 py-4 font-semibold text-slate-700">{transaction.category}</td>
+                        <td className={`px-4 py-4 font-semibold ${transaction.type === 'Entrée' ? 'text-emerald-600' : 'text-red-600'}`}>
+                          {transaction.type === 'Entrée' ? '+' : '-'}{transaction.amount} €
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-4">{format(transaction.date)}</td>
+                      </tr>
+                    ) : (
+                      <tr>
+                        <td className="px-6 py-12 text-center" colSpan={4}>
+                          <div className="mx-auto flex max-w-sm flex-col items-center">
+                            <span className="mb-3 flex size-12 items-center justify-center rounded-xl border border-dashed border-indigo-300 bg-indigo-50 text-indigo-600">
+                              <ReceiptText aria-hidden="true" className="size-6" />
+                            </span>
+                            <p className="font-semibold text-slate-800">Aucune transaction enregistrée à ce jour</p>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="flex min-h-80 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="border-b border-slate-200 px-6 py-5">
+            <h2 className="text-lg font-semibold text-slate-800">Évolution de votre solde</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Suivez l’impact de vos entrées et sorties au fil du temps.
+            </p>
+          </div>
+          <div className="flex flex-1 items-center px-4 py-5">
+            {transactions && transactions.length > 0 ?
+              <BalanceChart transactions={transactions} />
+              :
+              <div className="mx-auto flex max-w-sm flex-col items-center">
+                <span className="mb-3 flex size-12 items-center justify-center rounded-xl border border-dashed border-indigo-300 bg-indigo-50 text-indigo-600">
+                  <ReceiptText aria-hidden="true" className="size-6" />
+                </span>
+                <p className="font-semibold text-slate-800">Aucune donnée disponible pour calculer l’évolution de votre solde</p>
+              </div>}
+          </div>
+        </section>
       </section>
     </main>
   )

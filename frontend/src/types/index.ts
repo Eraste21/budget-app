@@ -89,3 +89,8 @@ export interface TransactionContextType {
     updateTransaction: (id: number, data: TransactionInput) => Promise<void>;
     deleteTransaction: (id: number) => Promise<void>;
 }
+
+export interface BalancePoint {
+    date: string
+    balance: number
+}

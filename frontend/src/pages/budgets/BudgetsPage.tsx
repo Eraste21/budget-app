@@ -2,12 +2,20 @@ import { BudgetForm } from "../../components/budgets/BudgetForm"
 import { BudgetList } from "../../components/budgets/BudgetList"
 import { ChartNoAxesCombined, CircleDollarSign, Plus, WalletCards } from "lucide-react"
 import { Modal } from "../../components/ui/Modal"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useBudget } from "../../hooks/budgets/useBudget"
 
 export const BudgetsPage = () => {
   const [isOpen, setIsOpen] = useState(false)
   const { currentBudget, totalSpent } = useBudget()
+
+  useEffect(() => {
+    const initBudget = async () => {
+       
+    }
+
+    initBudget()
+  }, [])
 
   return (
     <main className="min-h-full bg-slate-50 px-5 py-8 sm:px-8 lg:px-10">
@@ -22,7 +30,7 @@ export const BudgetsPage = () => {
         <div className="flex items-center justify-between gap-4 rounded-2xl border border-indigo-100 bg-linear-to-r from-blue-600 to-violet-600 p-6 text-white shadow-lg shadow-indigo-200/60">
           <div>
             <p className="text-sm font-medium text-indigo-100">Budget actif</p>
-            <h2 className="mt-2 text-3xl font-bold">{currentBudget?.amount} €</h2>
+            <h2 className="mt-2 text-3xl font-bold">{currentBudget ? currentBudget.amount : 0} €</h2>
           </div>
           <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/15 ring-1 ring-white/20">
             <WalletCards aria-hidden="true" className="size-6" />
