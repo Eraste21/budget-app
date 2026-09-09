@@ -67,7 +67,7 @@ export interface AuthContextType {
 }
 
 // contexte des budgets
-export interface BudgetContextType { 
+export interface BudgetContextType {
     budgets: Budget[] | null;
     currentBudget: Budget | null;
     totalSpent: number;
@@ -90,7 +90,21 @@ export interface TransactionContextType {
     deleteTransaction: (id: number) => Promise<void>;
 }
 
+// format de donnée pour le graphique du dashboard
 export interface BalancePoint {
     date: string
     balance: number
+}
+
+// format de donnée pour les graphiques dans la page des statistiques ( par catégorie )
+export interface BalancePointByCategory {
+    category: string
+    total: number
+}
+
+// format de donnée pour les graphiques dans la page des statistiques ( par mois )
+export interface MonthlyTotal {
+    month: string
+    entrees: number
+    sorties: number
 }
