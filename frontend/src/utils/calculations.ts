@@ -88,7 +88,7 @@ export const calculateProjection = (transactions: Transaction[], monthsAhead: nu
     const results: ProjectionPoint[] = []
     let projectedBalance = currentBalance
 
-    for (let i = 0; i < monthsAhead; i++) {
+    for (let i = 1; i <= monthsAhead; i++) {
         projectedBalance += recurringEffect - avgPonctuelle
         const futureDate = new Date()
         futureDate.setMonth(futureDate.getMonth() + i)
