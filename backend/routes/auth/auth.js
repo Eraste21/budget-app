@@ -3,7 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const bcrypt = require('bcrypt')
 const router = express.Router()
-const db = require('../../db')
+const pool = require('../../db')
 const jwt = require('jsonwebtoken')
 const authMiddleware = require('../../middleware/auth')
 
@@ -36,8 +36,10 @@ router.post('/register', async (req, res) => {
         const { username, email, password } = req.body
         const password_hash = await hashPassword(password)
 
-        const stmt = db.prepare('INSERT INTO users (username, email, password_hash) VALUES (@username, @email, @password_hash)')
-        stmt.run({ username, email, password_hash })
+        await pool.query(
+            'INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3)',
+            [username, email, password_hash]
+        )
 
         return res.status(201).json({ message: 'user created successfully !' })
 
@@ -50,8 +52,11 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body
-        const stmt = db.prepare('SELECT * FROM users WHERE email = ?')
-        const user = stmt.get(email)
+        const result = await pool.query(
+            'SELECT * FROM users WHERE email = $1',
+            [email]
+        )
+        const user = result.rows[0]
 
         if (!user) return res.status(401).json({ error: 'email or password invalid' })
 
@@ -72,11 +77,14 @@ router.post('/login', async (req, res) => {
 })
 
 // récupérer les informations de l'utilisateur connecté
-router.get('/profile', authMiddleware, (req, res) => {
+router.get('/profile', authMiddleware, async (req, res) => {
     const id = req.userId
     try {
-        const stmt = db.prepare('SELECT id, username, email, created_at FROM users WHERE id = ?')
-        const user = stmt.get(id)
+        const result = await pool.query(
+            'SELECT id, username, email, created_at FROM users WHERE id = $1',
+            [id]
+        )
+        const user = result.rows[0]
 
         if (!user) return res.status(404).json({ error: 'no user found' })
 

@@ -1,7 +1,7 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
 const router = express.Router()
-const db = require('../../db')
+const pool = require('../../db')
 
 const saltRounds = 10
 
@@ -30,12 +30,10 @@ router.post('/', async (req, res) => {
         const { username, email } = req.body
         const password = await hashPassword(req.body.password)
 
-        const stmt = db.prepare('INSERT INTO users (username, email, password_hash) VALUES (@username, @email, @password)')
-        stmt.run({
-            username,
-            email,
-            password
-        })
+        await pool.query(
+            'INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3)',
+            [username, email, password]
+        )
 
         return res.status(201).send('user created successfully !')
 
@@ -45,12 +43,10 @@ router.post('/', async (req, res) => {
 })
 
 // récupérer tous les utilisateurs
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
     try {
-        const stmt = db.prepare('SELECT id, username, email, created_at FROM users')
-        const users = stmt.all()
-
-        if (!users) return res.status(404).json({ error: 'no user found' })
+        const result = await pool.query('SELECT id, username, email, created_at FROM users')
+        const users = result.rows
 
         return res.status(200).json({ users })
 
@@ -60,11 +56,14 @@ router.get('/', (req, res) => {
 })
 
 // trouver un utilisateur par email ( GET /users/email?email=bob@gmail.com )
-router.get('/email', (req, res) => {
+router.get('/email', async (req, res) => {
     try {
         const { email } = req.query
-        const stmt = db.prepare('SELECT id, username, email, created_at FROM users WHERE email = ?')
-        const user = stmt.get(email)
+        const result = await pool.query(
+            'SELECT id, username, email, created_at FROM users WHERE email = $1',
+            [email]
+        )
+        const user = result.rows[0]
 
         if (!user) return res.status(404).json({ error: 'email not found' })
 
@@ -76,10 +75,13 @@ router.get('/email', (req, res) => {
 })
 
 // récupérer un utilisateur par id
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
-        const stmt = db.prepare('SELECT * FROM users WHERE id = ?')
-        const user = stmt.get(req.params.id)
+        const result = await pool.query(
+            'SELECT id, username, email, created_at FROM users WHERE id = $1',
+            [req.params.id]
+        )
+        const user = result.rows[0]
 
         if (!user) return res.status(404).json({ error: 'no user found' })
 
@@ -92,13 +94,15 @@ router.get('/:id', (req, res) => {
 
 
 // mettre à jour un utilisateur
-router.patch('/:id', (req, res) => {
+router.patch('/:id', async (req, res) => {
     try {
         const { username, email } = req.body
-        const stmt = db.prepare('UPDATE users SET username = ?, email = ? WHERE id = ?')
-        const result = stmt.run(username, email, req.params.id)
+        const result = await pool.query(
+            'UPDATE users SET username = $1, email = $2 WHERE id = $3',
+            [username, email, req.params.id]
+        )
 
-        if (result.changes === 0) return res.status(404).json({ error: 'no user found' })
+        if (result.rowCount === 0) return res.status(404).json({ error: 'no user found' })
 
         return res.status(200).json({ message: 'user updated successfully' })
 
@@ -110,8 +114,11 @@ router.patch('/:id', (req, res) => {
 // mettre à jour le mot de passe d'un utilisateur
 router.patch('/:id/password', async (req, res) => {
     try {
-        let stmt = db.prepare('SELECT * FROM users WHERE id = ?')
-        const user = stmt.get(req.params.id)
+        let result = await pool.query(
+            'SELECT * FROM users WHERE id = $1',
+            [req.params.id]
+        )
+        const user = result.rows[0]
         if (!user) return res.status(404).json({ error: 'no user found' })
 
         const { prev, password } = req.body
@@ -120,8 +127,10 @@ router.patch('/:id/password', async (req, res) => {
 
         user.password_hash = await hashPassword(password)
 
-        stmt = db.prepare('UPDATE users SET password_hash = ? WHERE id = ?')
-        stmt.run(user.password_hash, req.params.id)
+        result = await pool.query(
+            'UPDATE users SET password_hash = $1 WHERE id = $2',
+            [user.password_hash, req.params.id]
+        )
 
         return res.status(200).json({ message: 'user\'s password updated successfully' })
 
@@ -131,12 +140,14 @@ router.patch('/:id/password', async (req, res) => {
 })
 
 // supprimer un utilisateur
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
-        const stmt = db.prepare('DELETE FROM users WHERE id = ?')
-        const result = stmt.run(req.params.id)
+        const result = await pool.query(
+            'DELETE FROM users WHERE id = $1',
+            [req.params.id]
+        )
 
-        if (result.changes === 0) return res.status(404).json({ error: 'no user found' })
+        if (result.rowCount === 0) return res.status(404).json({ error: 'no user found' })
 
         return res.status(200).json({ message: 'user deleted successfully' })
 
