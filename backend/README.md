@@ -1,60 +1,53 @@
 # Budget App — Backend
 
-API REST de l’application **Budget App**, développée avec Express et SQLite.
+API REST de Budget App, construite avec Express et SQLite. Elle gère l’authentification, les utilisateurs, les budgets et les transactions.
 
-Le backend permet de créer et authentifier des utilisateurs, puis de gérer leurs budgets et transactions de manière isolée grâce à un jeton JWT.
+## Stack
 
-## Stack technique
-
-- Node.js et Express 5
-- SQLite avec `better-sqlite3`
-- Authentification JWT avec `jsonwebtoken`
-- Hachage des mots de passe avec `bcrypt`
-- Variables d’environnement avec `dotenv`
-- Rechargement automatique en développement avec `nodemon`
+- Node.js ;
+- Express 5 ;
+- SQLite avec `better-sqlite3` ;
+- `jsonwebtoken` pour les JWT ;
+- `bcrypt` pour les mots de passe ;
+- `dotenv` pour les variables d’environnement ;
+- `nodemon` en développement.
 
 ## Structure
 
 ```text
 backend/
 ├── middleware/
-│   └── auth.js                  # Vérification du jeton JWT
+│   └── auth.js
 ├── routes/
-│   ├── auth/auth.js             # Inscription et connexion
-│   ├── budgets/budgets.js       # Gestion des budgets
+│   ├── auth/auth.js
+│   ├── budgets/budgets.js
 │   ├── transactions/transactions.js
 │   └── users/users.js
-├── db.js                        # Connexion SQLite et création des tables
-├── server.js                    # Configuration et démarrage d’Express
+├── db.js
+├── server.js
 ├── package.json
 └── README.md
 ```
 
-## Installation
-
-Depuis le dossier `backend` :
+## Installation et configuration
 
 ```powershell
 cd backend
 npm install
 ```
 
-## Configuration
-
-Créer un fichier `.env` dans le dossier `backend` :
+Créer ensuite `backend/.env` :
 
 ```dotenv
 PORT=3001
 JWT_SECRET=remplacer_par_une_cle_longue_et_aleatoire
 ```
 
-`JWT_SECRET` est obligatoire pour générer et vérifier les jetons de connexion. Le port `3001` est utilisé par défaut si `PORT` n’est pas défini.
-
-Ne jamais enregistrer le fichier `.env` dans Git.
+`JWT_SECRET` est indispensable à la création et à la vérification des jetons. Le port par défaut est `3001`.
 
 ## Lancement
 
-Mode développement avec rechargement automatique :
+Développement :
 
 ```powershell
 npm run dev
@@ -66,171 +59,186 @@ Mode normal :
 npm start
 ```
 
-L’API est ensuite disponible à l’adresse :
+Test rapide :
 
 ```text
-http://localhost:3001
+GET http://localhost:3001/
 ```
 
-La route `GET /` permet de vérifier que le serveur répond.
+Réponse attendue :
+
+```json
+{ "message": "API is running\n" }
+```
 
 ## Base de données
 
-La base SQLite `database.db` est créée automatiquement au premier lancement dans le dossier depuis lequel le serveur est démarré.
+`db.js` crée automatiquement `database.db` et les tables suivantes :
 
-Pour conserver la base au bon emplacement, lancer systématiquement les commandes depuis `backend`.
+- `users` : compte, e-mail et mot de passe haché ;
+- `budgets` : montant et propriétaire du budget ;
+- `transactions` : date, catégorie, montant, type, fréquence, description, utilisateur et budget associé.
 
-Trois tables sont initialisées :
+Le budget actif correspond actuellement au budget le plus récent de l’utilisateur.
 
-- `users` : comptes utilisateurs et mots de passe hachés ;
-- `budgets` : budgets rattachés à un utilisateur ;
-- `transactions` : opérations rattachées à un utilisateur et, si disponible, au budget courant.
+Lancer le serveur depuis `backend` afin que le chemin relatif de `database.db` pointe vers le bon dossier.
 
-Les fichiers `*.db` sont ignorés par Git.
+Contraintes SQLite des transactions :
+
+```text
+type      = Entrée | Sortie
+frequency = Mensuelle | Ponctuelle
+```
+
+Les valeurs sont sensibles aux accents et aux majuscules. Les dates doivent être enregistrées au format `YYYY-MM-DD`.
 
 ## Authentification
 
-### Créer un compte
+### Inscription
 
-`POST /auth/register`
+```http
+POST /auth/register
+Content-Type: application/json
+```
 
 ```json
 {
-  "username": "Eraste",
-  "email": "eraste@example.com",
+  "username": "Marcus",
+  "email": "marcus@example.com",
   "password": "mot_de_passe"
 }
 ```
 
-### Se connecter
+### Connexion
 
-`POST /auth/login`
+```http
+POST /auth/login
+Content-Type: application/json
+```
 
 ```json
 {
-  "email": "eraste@example.com",
+  "email": "marcus@example.com",
   "password": "mot_de_passe"
 }
 ```
 
-La réponse contient un jeton :
+La réponse contient un JWT valable sept jours :
 
 ```json
-{
-  "token": "jeton_jwt"
-}
+{ "token": "jeton_jwt" }
 ```
 
-Les routes de transactions nécessitent ensuite cet en-tête :
+### Route protégée
 
 ```http
 Authorization: Bearer jeton_jwt
 ```
 
-## Routes disponibles
+`GET /auth/profile` renvoie le profil de l’utilisateur connecté sans son mot de passe.
+
+## Routes
 
 ### Authentification
 
 - `POST /auth/register` : créer un compte ;
-- `POST /auth/login` : se connecter et obtenir un JWT ;
-- `GET /auth/profile` : récupérer le profil connecté.
+- `POST /auth/login` : obtenir un JWT ;
+- `GET /auth/profile` : obtenir le profil connecté.
 
 ### Utilisateurs
 
 - `POST /users` : créer un utilisateur ;
-- `GET /users` : récupérer tous les utilisateurs ;
-- `GET /users/email?email=...` : rechercher un utilisateur par e-mail ;
-- `GET /users/:id` : récupérer un utilisateur par identifiant ;
+- `GET /users` : lister les utilisateurs ;
+- `GET /users/email?email=...` : rechercher par e-mail ;
+- `GET /users/:id` : obtenir un utilisateur ;
 - `PATCH /users/:id` : modifier le nom et l’e-mail ;
 - `PATCH /users/:id/password` : modifier le mot de passe ;
 - `DELETE /users/:id` : supprimer un utilisateur.
 
-### Budgets protégés
+Les routes `/users` ne sont actuellement pas protégées par `authMiddleware`.
+
+### Budgets — JWT requis
 
 - `POST /budgets` : créer un budget ;
-- `GET /budgets` : récupérer tous les budgets de l’utilisateur ;
-- `GET /budgets/current` : récupérer le budget le plus récent ;
-- `GET /budgets/current/spent` : calculer les dépenses du budget courant ;
-- `GET /budgets/:id` : récupérer un budget ;
-- `PATCH /budgets/current` : remplacer le montant du budget courant ;
-- `PATCH /budgets/current/adjust` : augmenter ou diminuer le budget courant ;
+- `GET /budgets` : lister les budgets de l’utilisateur ;
+- `GET /budgets/current` : obtenir le budget le plus récent ;
+- `GET /budgets/current/spent` : obtenir ses dépenses ;
+- `GET /budgets/:id` : obtenir un budget précis ;
+- `PATCH /budgets/current` : remplacer le montant courant ;
+- `PATCH /budgets/current/adjust` : appliquer un ajustement ;
 - `DELETE /budgets/:id` : supprimer un budget.
 
-Corps attendu pour créer un budget :
+Création :
 
 ```json
-{
-  "amount": 1500
-}
+{ "amount": 1500 }
 ```
 
-Corps attendu pour remplacer le montant courant :
+Remplacement du montant :
 
 ```json
-{
-  "newAmount": 1800
-}
+{ "newAmount": 1800 }
 ```
 
-Corps attendu pour ajuster le montant courant :
+Ajustement :
 
 ```json
-{
-  "delta": 200
-}
+{ "delta": -100 }
 ```
 
-Une valeur négative de `delta` diminue le budget.
+Un `delta` positif augmente le montant ; un `delta` négatif le diminue.
 
-### Transactions protégées
+### Transactions — JWT requis
 
 - `POST /transactions` : créer une transaction ;
-- `GET /transactions` : récupérer les transactions de l’utilisateur connecté, avec filtres facultatifs ;
-- `GET /transactions/:id` : récupérer une transaction ;
-- `PATCH /transactions/:id` : modifier une transaction ;
-- `DELETE /transactions/:id` : supprimer une transaction.
+- `GET /transactions` : lister et filtrer les transactions ;
+- `GET /transactions/total?type=...` : calculer un total ;
+- `GET /transactions/:id` : obtenir une transaction ;
+- `PATCH /transactions/:id` : la modifier ;
+- `DELETE /transactions/:id` : la supprimer.
 
-Exemple de corps pour créer ou modifier une transaction :
+Création ou modification :
 
 ```json
 {
-  "date": "2026-09-01",
+  "date": "2026-09-09",
   "category": "Alimentation",
   "amount": 42.5,
-  "type": "sortie",
-  "frequency": "ponctuelle",
-  "description": "Courses"
+  "type": "Sortie",
+  "frequency": "Ponctuelle",
+  "description": "Courses de la semaine"
 }
 ```
 
-Valeurs actuellement acceptées par SQLite :
-
-- `type` : `entrée` ou `sortie` ;
-- `frequency` : `mensuelle` ou `ponctuelle`.
-
-Filtres facultatifs de `GET /transactions` :
+Filtres acceptés par `GET /transactions` :
 
 - `budgetId` ;
 - `type` ;
 - `frequency` ;
-- `category`.
+- `category` ;
+- `limit`.
 
-Exemple :
+Exemples :
 
 ```text
-GET /transactions?type=sortie&category=Alimentation
+GET /transactions?type=Sortie&category=Alimentation
+GET /transactions?limit=3
+GET /transactions/total?type=Entrée
+GET /transactions/total?type=Sortie&budgetId=2
 ```
 
-## Scripts npm
+## Scripts
 
-- `npm run dev` : démarre le serveur avec `nodemon` ;
-- `npm start` : démarre le serveur avec Node.js ;
-- `npm test` : aucun test automatisé n’est encore configuré.
+- `npm run dev` : serveur avec rechargement automatique ;
+- `npm start` : serveur Node.js ;
+- `npm test` : aucun test n’est encore configuré.
 
-## Sécurité
+## Sécurité et limites
 
-- Utiliser une valeur `JWT_SECRET` longue, aléatoire et propre à chaque environnement.
-- Ne jamais envoyer ou stocker un mot de passe en clair.
-- Les mots de passe sont hachés avec bcrypt avant leur enregistrement.
-- Les routes `/budgets` et `/transactions` limitent les opérations à l’utilisateur identifié par le JWT.
-- Les routes `/users` ne sont actuellement pas protégées et doivent être sécurisées avant une mise en production.
+- Ne jamais versionner `.env` ou `database.db`.
+- Utiliser un secret JWT long et propre à chaque environnement.
+- Les mots de passe sont hachés avec bcrypt.
+- Les budgets et transactions sont filtrés par l’utilisateur du JWT.
+- Les routes `/users` restent à protéger.
+- Les corps et paramètres ne disposent pas encore d’une validation applicative complète.
+- CORS autorise actuellement toutes les origines ; il doit être restreint en production.

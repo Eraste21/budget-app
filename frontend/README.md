@@ -1,67 +1,80 @@
 # Budget App — Frontend
 
-Interface web React de Budget App. Elle fournit les écrans d’authentification et l’espace protégé de gestion des budgets et transactions.
+Interface React de Budget App. Elle fournit l’authentification, un espace protégé et les écrans nécessaires au suivi des budgets, transactions et statistiques.
 
-## Stack technique
+## Stack
 
-- React 19
-- TypeScript 6
-- Vite 8
-- React Router 7
-- Tailwind CSS 4
-- daisyUI 5
-- Lucide React
+- React 19 ;
+- TypeScript 6 ;
+- Vite 8 ;
+- React Router 7 ;
+- Tailwind CSS 4 ;
+- daisyUI 5 ;
+- Recharts 3 ;
+- Lucide React.
 
 ## Structure
 
 ```text
 frontend/src/
 ├── components/
-│   ├── budgets/          # Formulaire de budget
-│   ├── transactions/     # Formulaire et liste des transactions
-│   └── ui/               # Sidebar, liens et top bar
+│   ├── budgets/          # Liste, création et suppression des budgets
+│   ├── dashboard/        # Graphique du solde et guide Recharts
+│   ├── statistics/       # Graphiques statistiques
+│   ├── transactions/     # Liste, création et suppression des transactions
+│   └── ui/               # Modal, boutons et navigation
 ├── context/
-│   ├── auth/             # État d’authentification
-│   ├── budgets/          # État des budgets
-│   └── transactions/     # État et actions des transactions
-├── hooks/                # Accès aux contextes
-├── layout/               # Structure du tableau de bord
-├── pages/                # Pages associées aux routes
-├── services/             # Appels HTTP vers le backend
-├── types/                # Types TypeScript partagés
-├── App.tsx               # Déclaration des routes
-└── main.tsx              # Montage de React et des providers
+│   ├── auth/
+│   ├── budgets/
+│   └── transactions/
+├── hooks/                # Accès typé aux contextes
+├── layout/               # Sidebar, topbar et contenu des pages
+├── pages/
+│   ├── auth/
+│   ├── budgets/
+│   ├── dashboard/
+│   ├── statistics/
+│   └── transactions/
+├── services/             # Appels HTTP
+├── types/                # Interfaces TypeScript
+├── utils/                # Formatage et calculs statistiques
+├── App.tsx               # Routes et lazy loading
+└── main.tsx              # Providers et montage React
 ```
-
-## Prérequis
-
-- Node.js dans une version récente
-- npm
-- Backend Budget App lancé sur `http://localhost:3001`
 
 ## Installation
 
-Depuis le dossier `frontend` :
-
 ```powershell
+cd frontend
 npm install
 ```
 
+Le backend doit être lancé sur `http://localhost:3001`.
+
 ## Lancement
 
-Mode développement :
+Développement :
 
 ```powershell
 npm run dev
 ```
 
-Vite affiche l’adresse locale à ouvrir dans le navigateur.
-
-Prévisualisation de la version compilée :
+Compilation de production :
 
 ```powershell
 npm run build
+```
+
+Prévisualisation du build :
+
+```powershell
 npm run preview
+```
+
+Analyse ESLint :
+
+```powershell
+npm run lint
 ```
 
 ## Routes
@@ -69,52 +82,104 @@ npm run preview
 Routes publiques :
 
 - `/login` : connexion ;
-- `/register` : création d’un compte.
+- `/register` : inscription.
 
 Routes protégées :
 
-- `/dashboard` : synthèse du budget ;
-- `/budgets` : gestion des budgets ;
-- `/transactions` : gestion des transactions ;
-- `/statistics` : statistiques.
+- `/dashboard` : synthèse financière, dernières opérations et solde ;
+- `/budgets` : budget actif, dépenses et historique ;
+- `/transactions` : création, filtre et historique ;
+- `/statistics` : analyses et projections.
 
-Les routes protégées redirigent vers `/login` lorsqu’aucun jeton n’est disponible.
+Les pages sont chargées à la demande avec `React.lazy`. `ProtectedRoute` contrôle l’accès à l’espace connecté.
 
 ## Authentification
 
-Après une connexion réussie, le JWT renvoyé par le backend est enregistré dans `localStorage` sous la clé `token`.
+Après la connexion, le JWT est enregistré dans `localStorage` sous la clé `token`.
 
-Les services protégés transmettent ensuite :
+Les requêtes protégées utilisent :
 
 ```http
 Authorization: Bearer jeton_jwt
 ```
 
-Au chargement de l’application, le profil est demandé au backend pour vérifier la session existante.
+`AuthProvider` restaure la session en demandant le profil au backend. La déconnexion supprime le jeton et renvoie vers la page de connexion.
 
-## Services
+## Gestion de l’état
 
-- `services/api.ts` centralise l’URL de l’API, les en-têtes authentifiés et la vérification des réponses HTTP ;
-- `services/auth/authService.ts` gère l’inscription, la connexion et le profil ;
+L’application utilise trois contextes :
+
+- `AuthProvider` : utilisateur, jeton, inscription, connexion et déconnexion ;
+- `BudgetProvider` : budgets, budget actif, total dépensé et opérations associées ;
+- `TransactionProvider` : transactions, liste limitée, totaux, filtres et opérations CRUD.
+
+Les composants accèdent à ces contextes avec `useAuth`, `useBudget` et `useTransaction`.
+
+## Services HTTP
+
+- `services/api.ts` définit l’URL, construit les en-têtes JWT et centralise les erreurs avec `checkResponse` ;
+- `services/auth/authService.ts` gère l’authentification ;
 - `services/budgets/budgetService.ts` gère les budgets ;
-- `services/transactions/transactionService.ts` gère les transactions et leurs filtres.
+- `services/transactions/transactionService.ts` gère les transactions, filtres et totaux.
 
-L’URL du backend est actuellement définie directement dans `services/api.ts` :
+L’URL est actuellement écrite directement dans `services/api.ts` :
 
-```text
-http://localhost:3001
+```ts
+const API_URL = 'http://localhost:3001'
 ```
+
+Pour un déploiement, elle devra être déplacée vers une variable d’environnement Vite.
+
+## Transactions
+
+Le formulaire propose une liste contrôlée de catégories et transmet :
+
+- `date` au format `YYYY-MM-DD` ;
+- `category` ;
+- `amount` numérique ;
+- `type` : `Entrée` ou `Sortie` ;
+- `frequency` : `Mensuelle` ou `Ponctuelle` ;
+- `description` facultative.
+
+La page permet de filtrer les transactions par type. Les suppressions passent par une fenêtre de confirmation.
+
+## Budgets
+
+La page affiche :
+
+- le budget actif ;
+- le total des dépenses liées à ce budget ;
+- l’historique des budgets ;
+- le statut actif ou archivé ;
+- un formulaire de création ;
+- une confirmation avant suppression.
+
+Le budget actif est celui renvoyé par `/budgets/current`.
+
+## Dashboard et statistiques
+
+Le Dashboard affiche les totaux des entrées et sorties, les dépenses, le budget actif, les dernières transactions et l’évolution du solde.
+
+La page Statistiques contient :
+
+- les dépenses regroupées par catégorie ;
+- la comparaison mensuelle entre entrées et sorties ;
+- une projection du solde sur douze mois.
+
+Les calculs sont regroupés dans `src/utils/calculations.ts` et les graphiques utilisent Recharts.
+
+Un guide détaillé est disponible dans [src/components/dashboard/recharts.md](src/components/dashboard/recharts.md).
 
 ## Scripts npm
 
-- `npm run dev` : démarre Vite en développement ;
-- `npm run build` : vérifie TypeScript et génère la version de production ;
-- `npm run lint` : lance ESLint ;
-- `npm run preview` : sert localement la version compilée.
+- `npm run dev` : démarre Vite ;
+- `npm run build` : vérifie TypeScript et compile l’application ;
+- `npm run lint` : exécute ESLint ;
+- `npm run preview` : sert le build localement.
 
-## État actuel
+## Limites actuelles
 
-- Le contexte d’authentification est connecté aux services.
-- Le contexte des transactions fournit les opérations CRUD.
-- Le contexte des budgets est encore une base vide à compléter.
-- Aucune suite de tests frontend n’est actuellement configurée.
+- Aucun test frontend automatisé n’est configuré.
+- L’URL de l’API n’utilise pas encore de variable d’environnement.
+- Recharts augmente la taille du bundle ; le lazy loading limite toutefois le chargement aux pages utilisées.
+- La validation du formulaire repose encore principalement sur les contrôles côté composant et les contraintes SQLite.
