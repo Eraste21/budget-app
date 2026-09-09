@@ -12,7 +12,7 @@ export const CategoryChart = ({transactions}: {transactions: Transaction[]}) => 
         <YAxis tick={{fontSize: 12}} />
         <Tooltip />
         <Legend />
-        <Bar dataKey="total" name="Dépenses" fill="#ef4444" />
+        <Bar dataKey="total" name="Dépenses" fill="#ef4444" animationEasing="ease" />
       </BarChart>
     </ResponsiveContainer>
   )

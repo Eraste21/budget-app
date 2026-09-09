@@ -65,7 +65,7 @@ router.get('/current/spent', authMiddleware, (req, res) => {
             WHERE user_id = ? AND budget_id = ? AND type = 'Sortie'
         `)
 
-        const result = stmt.get(userId, budgetId, type)
+        const result = stmt.get(userId, budgetId)
         const spent = result.total ?? 0
 
         return res.status(200).json({ spent })

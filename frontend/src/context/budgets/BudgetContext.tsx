@@ -10,6 +10,7 @@ import {
     decreaseCurrentBudget as decreaseCurrentBudgetService,
     deleteCurrentBudget as deleteCurrentBudgetService
 } from "../../services/budgets/budgetService";
+import { useAuth } from "../../hooks/auth/useAuth";
 
 const BudgetContext = createContext<BudgetContextType | null>(null)
 export default BudgetContext;
@@ -19,7 +20,10 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
     const [currentBudget, setCurrentBudget] = useState<Budget | null>(null)
     const [totalSpent, setTotalSpent] = useState(0)
 
+    const {token} = useAuth()
+
     useEffect(() => {
+        if (!token) return
         const initBudget = async () => {
             await refreshBudgets()
             await refreshCurrentBudget()
@@ -27,7 +31,7 @@ export const BudgetProvider = ({ children }: { children: ReactNode }) => {
         }
 
         initBudget()
-    }, [])
+    }, [token])
 
     // créer un budget
     const createBudget = async (data: BudgetInput) => {

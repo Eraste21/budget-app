@@ -12,8 +12,8 @@ export const MonthlyComparisonChart = ({transactions}: {transactions: Transactio
             <YAxis tick={{fontSize: 12}} />
             <Tooltip />
             <Legend />
-            <Bar dataKey="entrees" name="Entrées" fill="#10b981" />
-            <Bar dataKey="sorties" name="Sorties" fill="#ef4444" />
+            <Bar dataKey="entrees" name="Entrées" fill="#10b981" animationEasing="ease-in-out" />
+            <Bar dataKey="sorties" name="Sorties" fill="#ef4444" animationEasing="ease-in-out" />
         </BarChart>
     </ResponsiveContainer>
   )
