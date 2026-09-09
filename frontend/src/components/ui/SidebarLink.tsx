@@ -4,10 +4,17 @@ type SidebarLinkProps = {
   name: string;
   isActive: boolean;
   page: string;
+  onNavigate?: () => void;
 }
 
-export const SidebarLink = ({ name, isActive, page }: SidebarLinkProps) => {
+export const SidebarLink = ({ name, isActive, page, onNavigate }: SidebarLinkProps) => {
   const navigate = useNavigate()
+
+  const handleClick = () => {
+    navigate(page)
+    onNavigate?.()
+  }
+
   return (
     <div
       className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm font-semibold transition ${
@@ -15,7 +22,7 @@ export const SidebarLink = ({ name, isActive, page }: SidebarLinkProps) => {
           ? 'border-indigo-200 bg-linear-to-r from-blue-50 to-violet-50 text-indigo-700 shadow-sm'
           : 'border-transparent text-slate-600 hover:border-slate-200 hover:bg-slate-50 hover:text-indigo-700'
       }`}
-      onClick={() => navigate(page)}
+      onClick={handleClick}
       aria-current={isActive ? 'page' : undefined}
     >
       <span

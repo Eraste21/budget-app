@@ -1,21 +1,39 @@
-import { Code2, LogOut } from "lucide-react"
+import { Code2, LogOut, Menu, X } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../hooks/auth/useAuth"
 
-export const Topbar = () => {
+type TopbarProps = {
+    isSidebarOpen: boolean
+    onMenuClick: () => void
+}
+
+export const Topbar = ({ isSidebarOpen, onMenuClick }: TopbarProps) => {
     const { user } = useAuth()
     const { logout } = useAuth()
     const navigate = useNavigate()
 
     return (
-        <div className="flex h-18 w-full shrink-0 items-center justify-between border-b border-indigo-100 bg-white px-4 py-4 shadow-sm sm:px-6 lg:px-8">
-            <div className="flex shrink-0 cursor-pointer items-center gap-3" onClick={() => navigate('/dashboard')}>
-                <span className="flex size-10 items-center justify-center rounded-xl bg-linear-to-br from-blue-600 to-violet-600 text-lg font-bold text-white shadow-sm shadow-indigo-200">
-                    <Code2 />
-                </span>
-                <h1 className="whitespace-nowrap text-xl font-bold tracking-tight text-indigo-950">
-                    By deveraste21
-                </h1>
+        <div className="flex h-18 w-full shrink-0 items-center justify-between border-b border-indigo-100 bg-white px-3 py-4 shadow-sm sm:px-6 lg:px-8">
+            <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+                <button
+                    aria-controls="mobile-sidebar"
+                    aria-expanded={isSidebarOpen}
+                    aria-label={isSidebarOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+                    className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-indigo-100 bg-indigo-50 text-indigo-700 transition hover:bg-indigo-100 focus:outline-none focus:ring-4 focus:ring-indigo-500/15 lg:hidden"
+                    type="button"
+                    onClick={onMenuClick}
+                >
+                    {isSidebarOpen ? <X aria-hidden="true" className="size-5" /> : <Menu aria-hidden="true" className="size-5" />}
+                </button>
+
+                <div className="flex min-w-0 cursor-pointer items-center gap-3" onClick={() => navigate('/dashboard')}>
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-blue-600 to-violet-600 text-lg font-bold text-white shadow-sm shadow-indigo-200">
+                        <Code2 aria-hidden="true" className="size-5" />
+                    </span>
+                    <h1 className="hidden whitespace-nowrap text-xl font-bold tracking-tight text-indigo-950 md:block">
+                        By deveraste21
+                    </h1>
+                </div>
             </div>
 
             <div className="flex shrink-0 items-center gap-3">

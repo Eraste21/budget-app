@@ -16,7 +16,12 @@ const transactionRouter = require('./routes/transactions/transactions')
 
 // instanciation de l'application express
 const app = express()
-app.use(cors())
+
+const corsOptions = {
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173' || 'http://localhost:5174'
+}
+
+app.use(cors(corsOptions))
 app.use(express.json())
 
 // utilisation des routes

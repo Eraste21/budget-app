@@ -3,7 +3,11 @@ import { SidebarLink } from "./SidebarLink"
 import { useLocation } from "react-router-dom"
 import { useAuth } from "../../hooks/auth/useAuth"
 
-export const Sidebar = () => {
+type SidebarProps = {
+    onNavigate?: () => void
+}
+
+export const Sidebar = ({ onNavigate }: SidebarProps) => {
     const location = useLocation()
     const { logout } = useAuth()
     
@@ -15,7 +19,7 @@ export const Sidebar = () => {
     ]
 
     return (
-        <aside className="flex min-h-screen flex-col border-r border-indigo-100 bg-white px-5 py-4">
+        <nav aria-label="Navigation principale" className="flex h-full min-h-0 flex-col border-r border-indigo-100 bg-white px-5 py-4">
             <div className="flex items-center gap-3 pl-4">
                 <span className="flex size-10 items-center justify-center rounded-xl bg-linear-to-br from-blue-600 to-violet-600 text-white shadow-sm shadow-indigo-200">
                     <Landmark aria-hidden="true" className="size-5" />
@@ -26,7 +30,7 @@ export const Sidebar = () => {
             </div>
             <div className="mt-8 flex-1">
                 {links.map((link) => (
-                    <SidebarLink name={link.name} isActive={location.pathname === link.page} page={link.page} />
+                    <SidebarLink name={link.name} isActive={location.pathname === link.page} page={link.page} onNavigate={onNavigate} />
                 ))}
             </div>
 
@@ -38,6 +42,6 @@ export const Sidebar = () => {
                 <LogOut aria-hidden="true" className="size-5" />
                 Déconnexion
             </button>
-        </aside>
+        </nav>
     )
 }
