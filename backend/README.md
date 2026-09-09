@@ -1,12 +1,12 @@
 # Budget App — Backend
 
-API REST de Budget App, construite avec Express et SQLite. Elle gère l’authentification, les utilisateurs, les budgets et les transactions.
+API REST de Budget App, construite avec Express et PostgreSQL. Elle gère l’authentification, les utilisateurs, les budgets et les transactions.
 
 ## Stack
 
 - Node.js ;
 - Express 5 ;
-- SQLite avec `better-sqlite3` ;
+- PostgreSQL avec le pilote `pg` ;
 - `jsonwebtoken` pour les JWT ;
 - `bcrypt` pour les mots de passe ;
 - `dotenv` pour les variables d’environnement ;
@@ -41,9 +41,14 @@ Créer ensuite `backend/.env` :
 ```dotenv
 PORT=3001
 JWT_SECRET=remplacer_par_une_cle_longue_et_aleatoire
+DATABASE_URL=postgresql://utilisateur:mot_de_passe@hote:5432/budget_app
 ```
 
-`JWT_SECRET` est indispensable à la création et à la vérification des jetons. Le port par défaut est `3001`.
+- `JWT_SECRET` est indispensable à la création et à la vérification des jetons.
+- `DATABASE_URL` contient les informations de connexion à PostgreSQL.
+- Le port HTTP par défaut est `3001`.
+
+La configuration actuelle active SSL avec `rejectUnauthorized: false`. Elle est adaptée à certains hébergeurs PostgreSQL ; pour une base locale sans SSL, la configuration de `db.js` devra être adaptée.
 
 ## Lancement
 
@@ -73,7 +78,7 @@ Réponse attendue :
 
 ## Base de données
 
-`db.js` crée automatiquement `database.db` et les tables suivantes :
+`db.js` crée automatiquement les tables suivantes dans la base indiquée par `DATABASE_URL` :
 
 - `users` : compte, e-mail et mot de passe haché ;
 - `budgets` : montant et propriétaire du budget ;
@@ -81,9 +86,7 @@ Réponse attendue :
 
 Le budget actif correspond actuellement au budget le plus récent de l’utilisateur.
 
-Lancer le serveur depuis `backend` afin que le chemin relatif de `database.db` pointe vers le bon dossier.
-
-Contraintes SQLite des transactions :
+Contraintes PostgreSQL des transactions :
 
 ```text
 type      = Entrée | Sortie
@@ -235,7 +238,7 @@ GET /transactions/total?type=Sortie&budgetId=2
 
 ## Sécurité et limites
 
-- Ne jamais versionner `.env` ou `database.db`.
+- Ne jamais versionner `.env` ou exposer `DATABASE_URL`.
 - Utiliser un secret JWT long et propre à chaque environnement.
 - Les mots de passe sont hachés avec bcrypt.
 - Les budgets et transactions sont filtrés par l’utilisateur du JWT.

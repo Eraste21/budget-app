@@ -32,7 +32,7 @@ Budget App permet de créer un compte, suivre ses entrées et sorties, gérer pl
 ### Backend
 
 - Node.js et Express 5 ;
-- SQLite avec `better-sqlite3` ;
+- PostgreSQL avec le pilote `pg` ;
 - JSON Web Token pour l’authentification ;
 - bcrypt pour le hachage des mots de passe ;
 - dotenv pour la configuration.
@@ -41,7 +41,7 @@ Budget App permet de créer un compte, suivre ses entrées et sorties, gérer pl
 
 ```text
 budget-app/
-├── backend/          # API REST et base SQLite
+├── backend/          # API REST et connexion PostgreSQL
 ├── frontend/         # Application React
 └── README.md         # Vue d’ensemble
 ```
@@ -55,7 +55,8 @@ Documentation détaillée :
 ## Prérequis
 
 - Node.js récent ;
-- npm.
+- npm ;
+- une base de données PostgreSQL accessible.
 
 ## Installation
 
@@ -76,6 +77,7 @@ Créer `backend/.env` :
 ```dotenv
 PORT=3001
 JWT_SECRET=remplacer_par_une_cle_longue_et_aleatoire
+DATABASE_URL=postgresql://utilisateur:mot_de_passe@hote:5432/budget_app
 ```
 
 L’API frontend est actuellement configurée sur `http://localhost:3001` dans `frontend/src/services/api.ts`.
@@ -112,8 +114,8 @@ Le projet ne possède pas encore de suite de tests automatisés.
 
 ## Points d’attention
 
-- Lancer le backend depuis son propre dossier afin que `database.db` soit créé au bon emplacement.
+- Vérifier que `DATABASE_URL` pointe vers une base PostgreSQL accessible avant de lancer le backend.
 - Utiliser le format ISO `YYYY-MM-DD` pour les dates de transaction.
 - Respecter exactement les valeurs `Entrée`, `Sortie`, `Mensuelle` et `Ponctuelle`.
-- Ne jamais versionner `backend/.env` ou un fichier `*.db`.
+- Ne jamais versionner `backend/.env` ou exposer les identifiants PostgreSQL.
 - Les routes `/users` doivent être protégées avant un déploiement en production.

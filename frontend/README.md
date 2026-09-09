@@ -182,4 +182,4 @@ Un guide détaillé est disponible dans [src/components/dashboard/recharts.md](s
 - Aucun test frontend automatisé n’est configuré.
 - L’URL de l’API n’utilise pas encore de variable d’environnement.
 - Recharts augmente la taille du bundle ; le lazy loading limite toutefois le chargement aux pages utilisées.
-- La validation du formulaire repose encore principalement sur les contrôles côté composant et les contraintes SQLite.
+- La validation du formulaire repose encore principalement sur les contrôles côté composant et les contraintes PostgreSQL.
