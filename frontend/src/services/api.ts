@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3001'
+const API_URL = import.meta.env.VITE_API_URL || 'https://budget-app-api.up.railway.app'
 
 const getToken = () => localStorage.getItem('token')
 
