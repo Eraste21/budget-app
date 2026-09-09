@@ -1,4 +1,4 @@
-import type { BalancePointByCategory, BalancePoint, Transaction, MonthlyTotal } from "../types";
+import type { BalancePointByCategory, BalancePoint, Transaction, MonthlyTotal, ProjectionPoint } from "../types";
 import { getYearMonth } from "./format";
 
 export const calculateBalanceOverTime = (transactions: Transaction[]): BalancePoint[] => {
@@ -7,7 +7,7 @@ export const calculateBalanceOverTime = (transactions: Transaction[]): BalancePo
     )
 
     let solde = 0
-    let results = new Map<string, number>()
+    const results = new Map<string, number>()
 
     for (const transaction of sorted) {
         solde += (transaction.type === 'Entrée') ? transaction.amount : -transaction.amount
@@ -18,8 +18,8 @@ export const calculateBalanceOverTime = (transactions: Transaction[]): BalancePo
 }
 
 export const calculateTotalsByCategory = (transactions: Transaction[]): BalancePointByCategory[] => {
-    let results = new Map<string, number>()
     let total = 0
+    const results = new Map<string, number>()
 
     for (const transaction of transactions) {
         if (transaction.type !== 'Sortie') continue
@@ -48,4 +48,54 @@ export const calculateTotalsByMonth = (transactions: Transaction[]): MonthlyTota
     }
 
     return Array.from(results.values())
+}
+
+export const calculateAverageMonthlyPonctuelle = (transactions: Transaction[]) => {
+    const ponctuelles = transactions.filter((t) => t.type === 'Sortie' && t.frequency === 'Ponctuelle')
+    if (ponctuelles.length === 0) return 0
+    
+    let total = 0
+    const data = calculateTotalsByMonth(ponctuelles)
+
+    for (const d of data) total += d.sorties
+
+    return total / data.length
+}
+
+export const getRecurringTransactions = (transactions: Transaction[]) => {
+    const mensuelles = transactions.filter((t) => t.frequency === 'Mensuelle')
+    if (mensuelles.length === 0) return []
+
+    const results = new Map<string, Transaction>()
+
+    for (const m of mensuelles) results.set(m.category, m)
+
+    return Array.from(results.values())
+}
+
+export const calculateProjection = (transactions: Transaction[], monthsAhead: number): ProjectionPoint[] => {
+    const balanceHistory = calculateBalanceOverTime(transactions)
+    const currentBalance = balanceHistory.length > 0 ? balanceHistory[balanceHistory.length -1].balance : 0
+
+    const recurring = getRecurringTransactions(transactions)
+    const avgPonctuelle = calculateAverageMonthlyPonctuelle(transactions)
+    
+    let recurringEffect = 0
+    for (const t of recurring) {
+        recurringEffect += t.type === 'Entrée' ? t.amount : -t.amount
+    }
+
+    const results: ProjectionPoint[] = []
+    let projectedBalance = currentBalance
+
+    for (let i = 0; i < monthsAhead; i++) {
+        projectedBalance += recurringEffect - avgPonctuelle
+        const futureDate = new Date()
+        futureDate.setMonth(futureDate.getMonth() + i)
+        const month = `${futureDate.getFullYear()}-${String(futureDate.getMonth() + 1).padStart(2, '0')}`
+
+        results.push({month, projectedBalance})
+    }
+
+    return results
 }

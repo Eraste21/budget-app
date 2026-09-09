@@ -16,6 +16,8 @@ export const TransactionForm = ({ onClose }: TransactionFormProps) => {
 
   const { createTransaction } = useTransaction()
 
+  const categories = ['Abonnement', 'Aide / Allocations', 'Alimentation', 'Anniversaire', 'Assurances', 'Cadeau', 'Courses', 'Dons', 'Facture', 'Fonds Familiaux', 'Frais médicaux', 'Imprévus', 'Impôts / Taxes', 'Logement', 'Loisirs', 'Prêt', 'Recettes', 'Salaire', 'Scolarité', 'Shopping', 'Autre']
+
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault()
     setError('')
@@ -43,15 +45,20 @@ export const TransactionForm = ({ onClose }: TransactionFormProps) => {
           <label className="block text-sm font-semibold text-slate-700" htmlFor="category">
             Catégorie
           </label>
-          <input
-            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
-            type="text"
+          <select
+            className="w-full cursor-pointer rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 sm:max-w-xs"
             id="category"
             name="category"
-            placeholder="Ex. Alimentation"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-          />
+          >
+            <option value="">Sélectionner une catégorie</option>
+            {categories.map((categoryName) => (
+              <option key={categoryName} value={categoryName}>
+                {categoryName}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">

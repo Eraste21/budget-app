@@ -6,7 +6,7 @@ import { useTransaction } from "../../hooks/transactions/useTransaction"
 import { BalanceChart } from "../../components/dashboard/BalanceChart"
 
 export const DashboardPage = () => {
-  const { transactions, refreshTransactionsFilter, incomes, expenses } = useTransaction()
+  const { transactions, limitTransactions, refreshTransactionsFilter, incomes, expenses } = useTransaction()
   const { currentBudget, totalSpent } = useBudget()
 
   useEffect(() => {
@@ -85,8 +85,8 @@ export const DashboardPage = () => {
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-600">
                 {
-                  transactions && transactions.length > 0 ?
-                    transactions.map((transaction) =>
+                  limitTransactions && limitTransactions.length > 0 ?
+                    limitTransactions.map((transaction) =>
                       <tr className="transition hover:bg-indigo-50/40">
                         <td className={`w-14 px-4 py-4 ${transaction.type === 'Entrée' ? 'text-emerald-600' : 'text-red-600'}`}>
                           <span className={`mx-auto flex size-9 items-center justify-center rounded-lg ${transaction.type === 'Entrée' ? 'bg-emerald-50' : 'bg-red-50'}`}>

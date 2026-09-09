@@ -1,7 +1,8 @@
 import { CategoryChart } from "../../components/statistics/CategoryChart"
 import { MonthlyComparisonChart } from "../../components/statistics/MonthlyComparisonChart"
+import { ProjectionChart } from "../../components/statistics/ProjectionChart"
 import { useTransaction } from "../../hooks/transactions/useTransaction"
-import { CalendarRange, ChartColumnBig } from "lucide-react"
+import { CalendarRange, ChartColumnBig, TrendingUp } from "lucide-react"
 
 export const StatisticsPage = () => {
   const { transactions } = useTransaction()
@@ -54,6 +55,26 @@ export const StatisticsPage = () => {
             <MonthlyComparisonChart transactions={transactions ?? []} />
           </div>
         </article>
+      </section>
+
+      <section className="mt-6 min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <header className="flex items-start gap-4 border-b border-slate-200 px-6 py-5">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600 ring-1 ring-violet-100">
+            <TrendingUp aria-hidden="true" className="size-5" />
+          </span>
+          <div>
+            <h2 className="text-lg font-semibold text-slate-800">
+              Projection du solde
+            </h2>
+            <p className="mt-1 text-sm leading-5 text-slate-500">
+              Découvrez une estimation de l’évolution de votre solde pour les prochains mois.
+            </p>
+          </div>
+        </header>
+
+        <div className="flex min-h-80 items-center px-4 py-6">
+          <ProjectionChart transactions={transactions ?? []} />
+        </div>
       </section>
     </main>
   )

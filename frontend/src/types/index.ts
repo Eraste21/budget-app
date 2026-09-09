@@ -81,6 +81,7 @@ export interface BudgetContextType {
 // contexte des transactions
 export interface TransactionContextType {
     transactions: Transaction[] | null;
+    limitTransactions: Transaction[] | null;
     incomes: string;
     expenses: string;
     createTransaction: (data: TransactionInput) => Promise<void>;
@@ -107,4 +108,10 @@ export interface MonthlyTotal {
     month: string
     entrees: number
     sorties: number
+}
+
+// format de donnée pour les graphiques dans la page des statistiques ( pour les projections )
+export interface ProjectionPoint {
+    month: string
+    projectedBalance: number
 }

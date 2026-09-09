@@ -15,12 +15,14 @@ export const TransactionContext = createContext<TransactionContextType | undefin
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     const [transactions, setTransactions] = useState<Transaction[] | null>(null)
+    const [limitTransactions, setLimitTransactions] = useState<Transaction[] | null>(null)
     const [incomes, setIncomes] = useState('')
     const [expenses, setExpenses] = useState('')
 
     useEffect(() => {
         const initTransaction = async () => {
             await refreshTransactions()
+            await refreshTransactionsFilter('limit=3')
             await getTotal()
         }
 
@@ -52,7 +54,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     // lister toutes les transactions ( par filtre )
     const refreshTransactionsFilter = async (query?: string) => {
         const response = await getTransactionsFilterService(query)
-        setTransactions(response)
+        setLimitTransactions(response)
         await getTotal()
     }
 
@@ -71,7 +73,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     }
 
     return (
-        <TransactionContext.Provider value={{ transactions, incomes, expenses, createTransaction, refreshTransactions, refreshTransactionsFilter, updateTransaction, deleteTransaction }}>
+        <TransactionContext.Provider value={{ transactions, limitTransactions, incomes, expenses, createTransaction, refreshTransactions, refreshTransactionsFilter, updateTransaction, deleteTransaction }}>
             {children}
         </TransactionContext.Provider>
     )
